@@ -2,9 +2,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Stores the main variables and session data.
- *
- * This class is in charge of all the visible "stuff". It knows what the treadmill is doing, what the statistics are, and so forth.
+ * Stores the main variables and session data. This class is in charge of all
+ * the visible "stuff". It knows what the treadmill is doing, what the
+ * statistics are, and so forth.
  *
  * @version 0.2
  */
@@ -23,13 +23,19 @@ public class Session {
 	private Belt belt;
 	*/
 
-	/* Cache variables: these should be the sums of all the values in this.history; to get usable data while running, add in the values in currentValues. */
+	/* Cache variables: these should be the sums of all the values in
+	 * this.history; to get usable data while running, add in the values in
+	 * currentValues. */
 	private long timeElapsedCache;
 	private double totalDistanceCache;
-	/* Now that I think about, caloriesBurned actually depends on the weight, which the user might change, so let's not keep track of it.
+	/* Now that I think about, caloriesBurned actually depends on the
+	 * weight, which the user might change, so let's not keep track of it.
 	private int caloriesBurnedCache;
 	*/
 
+	/**
+	 * State of the treadmill.
+	 */
 	public enum State {
 		RUNNING, PAUSED, STOPPED;
 	}
@@ -37,10 +43,12 @@ public class Session {
 
 
 	/**
-	 * Sets up the treadmill and puts it in a stopped state. To actually start the treadmill, you must call {@link #start(int, int)}.
+	 * Sets up the treadmill and puts it in a stopped state. To actually
+	 * start the treadmill, you must call {@link #start(int, int)}.
 	 */
 	public Session() {
-		history = new ArrayList<HistoryData>(50); // Pre-allocate memory for 50. Nice!
+		// Pre-allocate memory for 50. Nice!
+		history = new ArrayList<HistoryData>(50);
 		timeElapsedCache = 0;
 		totalDistanceCache = 0.0;
 		timeRatio = 1;
@@ -117,7 +125,8 @@ public class Session {
 	}
 
 	/**
-	 * Stops the treadmill. Forgets all of the session data including time elapsed, distance run, etc.
+	 * Stops the treadmill. Forgets all of the session data including time
+	 * elapsed, distance run, etc.
 	 */
 	public void stop() {
 		timeElapsedCache = 0;
@@ -126,13 +135,15 @@ public class Session {
 		currentValues = null;
 		
 		if (state != State.STOPPED) {
-			/* If the state is already stopped, no need to reallocate 50 new HistoryData objects */
+			// If the state is already stopped, no need to
+			// reallocate 50 new HistoryData objects
 			history = new ArrayList<HistoryData>(50);
 		}
 		state = State.STOPPED;
 	}
 	/**
-	 * Starts the treadmill. If the treadmill is currently running or paused, this method has no effect.
+	 * Starts the treadmill. If the treadmill is currently running or
+	 * paused, this method has no effect.
 	 *
 	 * @param speed   speed in miles per hour
 	 * @param incline inclination in degrees
@@ -144,7 +155,8 @@ public class Session {
 		state = State.RUNNING;
 	}
 	/**
-	 * Pauses the treadmill. All data are retained. If the treadmill is already paused or stopped, this method has no effect.
+	 * Pauses the treadmill. All data are retained. If the treadmill is
+	 * already paused or stopped, this method has no effect.
 	 */
 	public void pause() {
 		if (state != State.RUNNING) return;
@@ -152,7 +164,8 @@ public class Session {
 		state = State.PAUSED;
 	}
 	/**
-	 * Resumes from a paused state. If the treadmill is already going, or has been stopped completely, this method does nothing.
+	 * Resumes from a paused state. If the treadmill is already going, or
+	 * has been stopped completely, this method does nothing.
 	 */
 	public void resume() {
 		if (state != State.PAUSED) return;
@@ -161,7 +174,8 @@ public class Session {
 
 
 	/**
-	 * Saves the history data. Call this when you want to put <tt>currentValues</tt> into the <tt>history</tt> data store.
+	 * Saves the history data. Call this when you want to put
+	 * <tt>currentValues</tt> into the <tt>history</tt> data store.
 	 */
 	private void saveHistoryData() {
 		currentValues.setTime(System.currentTimeMillis() - runningSince);
@@ -169,9 +183,13 @@ public class Session {
 		history.add(currentValues);
 	}
 	/**
-	 * Updates the time and distance caches. Should be called every time a {@link HistoryData} object is added to the <tt>history</tt> data store. If you forget to call this method, {@link #calculateCalories(int)} will be off.
+	 * Updates the time and distance caches. Should be called every time a
+	 * {@link HistoryData} object is added to the <tt>history</tt> data
+	 * store. If you forget to call this method, {@link
+	 * #calculateCalories(int)} will be off.
 	 *
-	 * <p>Note that {@link #saveHistoryData} calls this method, so if you operate through it, you will be A-OK.
+	 * <p>Note that {@link #saveHistoryData} calls this method, so if you
+	 * operate through it, you will be A-OK.
 	 *
 	 * @param timeToAdd additional time run in milliseconds
 	 * @param distToAdd additional distance in miles

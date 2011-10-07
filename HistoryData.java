@@ -1,5 +1,6 @@
 /**
- * A class to save the history for a certain time with constant speed and inclination.
+ * A class to save the history for a certain time with constant speed and
+ * inclination.
  *
  * @version 0.1
  */
@@ -10,7 +11,11 @@ public class HistoryData {
 
 
 	/**
-	 * Creates a HistoryData object without a time spanned. This constructor is meant for a HistoryData object which is currently being ran (to take advantage of, for example, the {@link #calculateCalories(int, long)} method). In this case, you must specify the timespan ran in all of the calculation methods.
+	 * Creates a HistoryData object without a time spanned. This
+	 * constructor is meant for a HistoryData object which is currently
+	 * being ran (to take advantage of, for example, the {@link
+	 * #calculateCalories(int, long)} method). In this case, you must
+	 * specify the timespan ran in all of the calculation methods.
 	 *
 	 * @param vel velocity in miles per hour
 	 * @param inc inclination in degrees
@@ -92,10 +97,13 @@ public class HistoryData {
 		return (int) (0.75 * weight * ts);
 	}
 	/**
-	 * Returns the number of calories burnt during the lifetime of the object.
+	 * Returns the number of calories burnt during the lifetime of the
+	 * object.
 	 *
 	 * @param weight weight of the runner in pounds
 	 * @return       calories burnt
 	 */
-	public int calculateCalories(int weight) { return calculateCalories(weight, time); }
+	public int calculateCalories(int weight) {
+		return calculateCalories(weight, time);
+	}
 }
