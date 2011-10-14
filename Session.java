@@ -58,7 +58,7 @@ public class Session {
 	/**
 	 * Sets a new speed for the treadmill.
 	 *
-	 * @param sp new speed in miles per hour
+	 * @param sp new speed in tenths of a mile per hour
 	 */
 	public void setSpeed(int sp) {
 		int inclineSetting = currentValues.getIncline();
@@ -69,7 +69,7 @@ public class Session {
 	/**
 	 * Sets a new inclination for the treadmill.
 	 *
-	 * @param inc new inclination in degrees
+	 * @param inc new inclination in percent
 	 */
 	public void setIncline(int inc) {
 		int speedSetting = currentValues.getSpeed();
@@ -82,13 +82,13 @@ public class Session {
 	/**
 	 * Inclination of the treadmill.
 	 *
-	 * @return current inclination in degrees
+	 * @return current inclination in percent
 	 */
 	public int getIncline() { return currentValues.getIncline(); }
 	/**
 	 * Speed of the treadmill.
 	 *
-	 * @return current speed in miles per hour
+	 * @return current speed in tenths of a mile per hour
 	 */
 	public int getSpeed() { return currentValues.getSpeed(); }
 	/**
@@ -145,8 +145,8 @@ public class Session {
 	 * Starts the treadmill. If the treadmill is currently running or
 	 * paused, this method has no effect.
 	 *
-	 * @param speed   speed in miles per hour
-	 * @param incline inclination in degrees
+	 * @param speed   speed in tenths of a mile per hour
+	 * @param incline inclination in percent
 	 */
 	public void start(int speed, int incline) {
 		if (state != State.STOPPED) return;

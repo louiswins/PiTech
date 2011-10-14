@@ -5,8 +5,8 @@
  * @version 0.1
  */
 public class HistoryData {
-	private int speed; // mph
-	private int incline; // degrees
+	private int speed; // tenths of a mph
+	private int incline; // slope %
 	private long time; // ms
 
 
@@ -17,8 +17,8 @@ public class HistoryData {
 	 * #calculateCalories(int, long)} method). In this case, you must
 	 * specify the timespan ran in all of the calculation methods.
 	 *
-	 * @param vel velocity in miles per hour
-	 * @param inc inclination in degrees
+	 * @param vel velocity in tenths of a mile per hour
+	 * @param inc inclination in percent
 	 */
 	public HistoryData(int vel, int inc) {
 		this(vel, inc, 0);
@@ -26,8 +26,8 @@ public class HistoryData {
 	/**
 	 * Creates a HistoryData object with a time spanned.
 	 *
-	 * @param sp  velocity in miles per hour
-	 * @param inc inclination in degrees
+	 * @param sp  velocity in tenths of a mile per hour
+	 * @param inc inclination in percent
 	 * @param ts  time in milliseconds
 	 */
 	public HistoryData(int sp, int inc, long ts) {
@@ -61,7 +61,7 @@ public class HistoryData {
 	 */
 	public double getDistance(long ts) {
 		// miles = miles/hr * ms * (s/ms * hr/s)
-		return (double)(speed * ts) / 3600000.0;
+		return (double)speed/10.0 * ts / 3600000.0;
 	}
 
 	/**
@@ -74,14 +74,14 @@ public class HistoryData {
 	/**
 	 * Returns the speed.
 	 *
-	 * @return speed ran in miles per hour
+	 * @return speed ran in tenths of a mile per hour
 	 */
 	public int getSpeed() { return speed; }
 
 	/**
 	 * Returns the incline of the treadmill.
 	 *
-	 * @return inclination in degrees
+	 * @return inclination in percent
 	 */
 	public int getIncline() { return incline; }
 
