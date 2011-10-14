@@ -16,7 +16,7 @@ public class Session {
 	private int speedSetting;
 	private int inclineSetting;
 	*/
-	private long runningSince;
+
 	/** Doesn't do anything yet */
 	private int timeRatio;
 	/* TODO: not implemented yet
@@ -64,7 +64,6 @@ public class Session {
 		int inclineSetting = currentValues.getIncline();
 		saveHistoryData();
 		currentValues = new HistoryData(sp, inclineSetting);
-		runningSince = System.currentTimeMillis();
 	}
 	/**
 	 * Sets a new inclination for the treadmill.
@@ -75,7 +74,6 @@ public class Session {
 		int speedSetting = currentValues.getSpeed();
 		saveHistoryData();
 		currentValues = new HistoryData(speedSetting, inc);
-		runningSince = System.currentTimeMillis();
 	}
 
 
@@ -97,8 +95,7 @@ public class Session {
 	 * @return distance run in miles
 	 */
 	public double getDistance() {
-		long curTimeElapsed = System.currentTimeMillis() - runningSince;
-		return totalDistanceCache + currentValues.getDistance(curTimeElapsed);
+		return totalDistanceCache + currentValues.getDistance();
 	}
 	/**
 	 * Total time spent running
@@ -106,7 +103,7 @@ public class Session {
 	 * @return time run in milliseconds
 	 */
 	public long getTimeElapsed() {
-		return timeElapsedCache + System.currentTimeMillis() - runningSince;
+		return timeElapsedCache + currentValues.getTime();
 	}
 
 	/**
@@ -116,8 +113,7 @@ public class Session {
 	 * @return       calories burnt while running
 	 */
 	public int calculateCalories(int weight) {
-		long curTimeElapsed = System.currentTimeMillis() - runningSince;
-		int calories = currentValues.calculateCalories(weight, curTimeElapsed);
+		int calories = currentValues.calculateCalories(weight);
 		for (HistoryData curHist : history) {
 			calories += curHist.calculateCalories(weight);
 		}
@@ -131,7 +127,6 @@ public class Session {
 	public void stop() {
 		timeElapsedCache = 0;
 		totalDistanceCache = 0;
-		runningSince = 0;
 		currentValues = null;
 		
 		if (state != State.STOPPED) {
@@ -151,7 +146,6 @@ public class Session {
 	public void start(int speed, int incline) {
 		if (state != State.STOPPED) return;
 		currentValues = new HistoryData(speed, incline);
-		runningSince = System.currentTimeMillis();
 		state = State.RUNNING;
 	}
 	/**
@@ -160,7 +154,7 @@ public class Session {
 	 */
 	public void pause() {
 		if (state != State.RUNNING) return;
-		saveHistoryData();
+		currentValues.setEndTime();
 		state = State.PAUSED;
 	}
 	/**
@@ -169,7 +163,10 @@ public class Session {
 	 */
 	public void resume() {
 		if (state != State.PAUSED) return;
-		runningSince = System.currentTimeMillis();
+		int sp = currentValues.getSpeed();
+		int inc = currentValues.getIncline();
+		saveHistoryData();
+		currentValues = new HistoryData(sp, inc);
 	}
 
 
@@ -178,7 +175,7 @@ public class Session {
 	 * <tt>currentValues</tt> into the <tt>history</tt> data store.
 	 */
 	private void saveHistoryData() {
-		currentValues.setTime(System.currentTimeMillis() - runningSince);
+		currentValues.setEndTime();
 		updateCaches(currentValues.getTime(), currentValues.getDistance());
 		history.add(currentValues);
 	}

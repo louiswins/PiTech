@@ -2,48 +2,67 @@
  * A class to save the history for a certain time with constant speed and
  * inclination.
  *
- * @version 0.1
+ * @version 0.2
  */
 public class HistoryData {
 	private int speed; // tenths of a mph
 	private int incline; // slope %
-	private long time; // ms
+	private long startTime; // ms (unix time)
+	private long endTime; // ms (unix time)
 
 
 	/**
-	 * Creates a HistoryData object without a time spanned. This
-	 * constructor is meant for a HistoryData object which is currently
-	 * being ran (to take advantage of, for example, the {@link
-	 * #calculateCalories(int, long)} method). In this case, you must
-	 * specify the timespan ran in all of the calculation methods.
+	 * Creates a HistoryData object with a start time of the time of the
+	 * call.
 	 *
-	 * @param vel velocity in tenths of a mile per hour
-	 * @param inc inclination in percent
+	 * @param sp    speed in tenths of a mile per hour
+	 * @param inc   inclination in percent
 	 */
-	public HistoryData(int vel, int inc) {
-		this(vel, inc, 0);
+	public HistoryData(int sp, int inc) {
+		this(sp, inc, System.currentTimeMillis(), 0);
+	}
+	/**
+	 * Creates a HistoryData object with a start time.
+	 *
+	 * @param sp    speed in tenths of a mile per hour
+	 * @param inc   inclination in percent
+	 * @param start time in milliseconds
+	 */
+	public HistoryData(int sp, int inc, long start) {
+		this(sp, inc, start, 0);
 	}
 	/**
 	 * Creates a HistoryData object with a time spanned.
 	 *
-	 * @param sp  velocity in tenths of a mile per hour
-	 * @param inc inclination in percent
-	 * @param ts  time in milliseconds
+	 * @param sp    speed in tenths of a mile per hour
+	 * @param inc   inclination in percent
+	 * @param start start time in ms
+	 * @param end   end time in ms
 	 */
-	public HistoryData(int sp, int inc, long ts) {
+	public HistoryData(int sp, int inc, long start, long end) {
 		speed = sp;
 		incline = inc;
-		time = ts;
+		startTime = start;
+		endTime = end;
 	}
 
 
-
 	/**
-	 * Sets the timespan.
+	 * Sets the end time to now. If the end time is already set, doesn't
+	 * update it. If you really want to update the end time, call {@link
+	 * #setEndTime(long)}.
+	 */
+	public void setEndTime() {
+		if (!endTime) {
+			setEndTime(System.currentTimeMillis());
+		}
+	}
+	/**
+	 * Sets the end time.
 	 *
 	 * @param ts time in milliseconds
 	 */
-	public void setTime(long ts) { time = ts; }
+	public void setEndTime(long ts) { endTime = ts; }
 
 	/**
 	 * Returns the total distance run during this object's lifetime.
@@ -51,17 +70,9 @@ public class HistoryData {
 	 * @return distance run in miles
 	 */
 	public double getDistance() {
-		return getDistance(time);
-	}
-	/**
-	 * Returns the distance run during the timespan specified.
-	 *
-	 * @param ts time in milliseconds
-	 * @return   distance run in miles
-	 */
-	public double getDistance(long ts) {
+		long end = (endTime) ? endTime : System.currentTimeMillis();
 		// miles = miles/hr * ms * (s/ms * hr/s)
-		return (double)speed/10.0 * ts / 3600000.0;
+		return (double)speed/10.0 * (end - startTime) / 3600000.0;
 	}
 
 	/**
@@ -69,7 +80,10 @@ public class HistoryData {
 	 *
 	 * @return time the object was alive in milliseconds
 	 */
-	public long getTime() { return time; }
+	public long getTime() {
+		long end = (endTime) ? endTime : System.currentTimeMillis();
+		return end - startTime;
+	}
 
 	/**
 	 * Returns the speed.
@@ -86,24 +100,15 @@ public class HistoryData {
 	public int getIncline() { return incline; }
 
 	/**
-	 * Returns the number of calories burnt during the timespan specified.
-	 *
-	 * @param weight weight of the runner in pounds
-	 * @param ts     time in milliseconds
-	 * @return       calories burnt
-	 */
-	// XXX: This calculation is not very good, it should be changed later
-	public int calculateCalories(int weight, long ts) {
-		return (int) (0.75 * weight * ts);
-	}
-	/**
 	 * Returns the number of calories burnt during the lifetime of the
 	 * object.
 	 *
 	 * @param weight weight of the runner in pounds
 	 * @return       calories burnt
 	 */
-	public int calculateCalories(int weight) {
-		return calculateCalories(weight, time);
+	// XXX: This calculation is not very good, it should be changed later
+	public int calculateCalories(int weight, long ts) {
+		long end = (endTime) ? endTime : System.currentTimeMillis();
+		return (int) (0.75 * weight * (end - startTime));
 	}
 }
