@@ -1,4 +1,5 @@
 import java.lang.Math;
+import java.util.Random;
 
 /**
  * A class to represent a user.
@@ -10,6 +11,12 @@ public class User {
 	private double position; // offset in feet from center of treadmill
 	private int age; // years
 	private int weight; // pounds
+	private Random gen;
+
+	/**
+	 * Average (gaussian) variation in treadmill speed and user speed
+	 */
+	private static final double VARIATION = 0.05;
 
 	/**
 	 * Default constructor. Uses default values of 25 years and 180 lbs.
@@ -26,10 +33,25 @@ public class User {
 	public User(int age, int weight) {
 		this.age = age;
 		this.weight = weight;
-		this.speed = 0;
-		this.position = 0;
+		speed = 0;
+		position = 0;
+		gen = new Random();
 	}
 
+	/**
+	 * Updates the speed and position of the runner based on the speed of
+	 * the treadmill.
+	 *
+	 * @param treadmillSpeed speed of the treadmill in tenths of a mile per
+	 *                       hour
+	 * @param timeStep       number of milliseconds since last update
+	 */
+	public void updateSpeedPos(double treadmillSpeed, long timeStep) {
+		double factor = 1.0 + VARIATION * gen.nextGaussian();
+		speed = treadmillSpeed * factor; // mph / 10
+ 		// feet = mph * ms * hr/ms * feet/mile
+		position += (speed - treadmillSpeed)*10.0 * timeStep / 3600000.0 * 5280.0;
+	}
 	/**
 	 * Returns the current true speed of the user.
 	 *
