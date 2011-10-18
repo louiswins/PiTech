@@ -93,7 +93,7 @@ public class Session {
 	 *
 	 * @return current speed in tenths of a mile per hour
 	 */
-	public int getSpeed() throws UserFellOffException {
+	public double getSpeed() throws UserFellOffException {
 		try {
 			return runner.getSpeed();
 		} catch (UserFellOffException e) {
@@ -108,7 +108,7 @@ public class Session {
 	 */
 	public double getDistance() throws UserFellOffException {
 		try {
-			return totalDistanceCache + currentValues.getDistance() + runner.getDistance()/5280.0;
+			return totalDistanceCache + currentValues.getDistance() + runner.getPosition()/5280.0;
 		} catch (UserFellOffException e) {
 			stop();
 			throw e;
@@ -126,10 +126,9 @@ public class Session {
 	/**
 	 * Calories burnt.
 	 *
-	 * @param runner Current user of the treadmill
 	 * @return       calories burnt while running
 	 */
-	public int calculateCalories(User runner) {
+	public int calculateCalories() {
 		int calories = currentValues.calculateCalories(runner);
 		for (HistoryData curHist : history) {
 			calories += curHist.calculateCalories(runner);
@@ -200,9 +199,9 @@ public class Session {
 	 * Updates the time and distance caches. Should be called every time a
 	 * {@link HistoryData} object is added to the <tt>history</tt> data
 	 * store. If you forget to call this method, {@link
-	 * #calculateCalories(int)} will be off.
+	 * #calculateCalories()} will be off.
 	 *
-	 * <p>Note that {@link #saveHistoryData} calls this method, so if you
+	 * <p>Note that {@link #saveHistoryData()} calls this method, so if you
 	 * operate through it, you will be A-OK.
 	 *
 	 * @param timeToAdd additional time run in milliseconds

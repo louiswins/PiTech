@@ -53,7 +53,7 @@ public class HistoryData {
 	 * #setEndTime(long)}.
 	 */
 	public void setEndTime() {
-		if (!endTime) {
+		if (endTime == 0) {
 			setEndTime(System.currentTimeMillis());
 		}
 	}
@@ -70,7 +70,7 @@ public class HistoryData {
 	 * @return distance run in miles
 	 */
 	public double getDistance() {
-		long end = (endTime) ? endTime : System.currentTimeMillis();
+		long end = (endTime == 0) ? endTime : System.currentTimeMillis();
 		// miles = miles/hr * ms * (s/ms * hr/s)
 		return (double)speed/10.0 * (end - startTime) / 3600000.0;
 	}
@@ -81,7 +81,7 @@ public class HistoryData {
 	 * @return time the object was alive in milliseconds
 	 */
 	public long getTime() {
-		long end = (endTime) ? endTime : System.currentTimeMillis();
+		long end = (endTime == 0) ? endTime : System.currentTimeMillis();
 		return end - startTime;
 	}
 
@@ -108,7 +108,7 @@ public class HistoryData {
 	 */
 	// XXX: This calculation is not very good, it should be changed later
 	public int calculateCalories(User runner) {
-		long end = (endTime) ? endTime : System.currentTimeMillis();
+		long end = (endTime == 0) ? endTime : System.currentTimeMillis();
 		return (int) (0.75 * runner.getWeight() * (end - startTime));
 	}
 }
