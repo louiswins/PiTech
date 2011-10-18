@@ -38,7 +38,10 @@ public class User {
 	 *
 	 * @return Speed of user in tenths of a mile per hour
 	 */
-	public double getSpeed() {
+	public double getSpeed() throws UserFellOffException {
+		if (!isOnTreadmill()) {
+			throw new UserFellOffException();
+		}
 		return speed;
 	}
 	/**
@@ -46,15 +49,34 @@ public class User {
 	 *
 	 * @return Distance from center of treadmill in feet
 	 */
-	public double getPosition() {
+	public double getPosition() throws UserFellOffException {
+		if (!isOnTreadmill()) {
+			throw new UserFellOffException();
+		}
 		return position;
 	}
 	/**
-	 * Determines if a user is still on the treadmill
+	 * Returns the weight of the user.
+	 *
+	 * @return Weight of the user in lbs
+	 */
+	public int getWeight() {
+		return weight;
+	}
+	/**
+	 * Returns the age of the user.
+	 *
+	 * @return Age of the user in years
+	 */
+	public int getAge() {
+		return age;
+	}
+	/**
+	 * Determines if a user is still on the treadmill.
 	 *
 	 * @return If user is on treadmill
 	 */
-	public boolean isOnTreadmill() {
+	private boolean isOnTreadmill() {
 		return Math.abs(position) < TREADMILL_LENGTH / 2.0;
 	}
 }

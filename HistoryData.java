@@ -88,7 +88,7 @@ public class HistoryData {
 	/**
 	 * Returns the speed.
 	 *
-	 * @return speed ran in tenths of a mile per hour
+	 * @return speed running in tenths of a mile per hour
 	 */
 	public int getSpeed() { return speed; }
 
@@ -103,12 +103,12 @@ public class HistoryData {
 	 * Returns the number of calories burnt during the lifetime of the
 	 * object.
 	 *
-	 * @param weight weight of the runner in pounds
+	 * @param runner Current user of the treadmill
 	 * @return       calories burnt
 	 */
 	// XXX: This calculation is not very good, it should be changed later
-	public int calculateCalories(int weight, long ts) {
+	public int calculateCalories(User runner) {
 		long end = (endTime) ? endTime : System.currentTimeMillis();
-		return (int) (0.75 * weight * (end - startTime));
+		return (int) (0.75 * runner.getWeight() * (end - startTime));
 	}
 }

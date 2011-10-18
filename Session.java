@@ -6,7 +6,7 @@ import java.util.List;
  * the visible "stuff". It knows what the treadmill is doing, what the
  * statistics are, and so forth.
  *
- * @version 0.2
+ * @version 0.3
  */
 public class Session {
 	private List<HistoryData> history;
@@ -33,6 +33,8 @@ public class Session {
 	private int caloriesBurnedCache;
 	*/
 
+	private User runner;
+
 	/**
 	 * State of the treadmill.
 	 */
@@ -45,14 +47,17 @@ public class Session {
 	/**
 	 * Sets up the treadmill and puts it in a stopped state. To actually
 	 * start the treadmill, you must call {@link #start(int, int)}.
+	 *
+	 * @param user Current runner on the treadmill
 	 */
-	public Session() {
+	public Session(User user) {
 		// Pre-allocate memory for 50. Nice!
 		history = new ArrayList<HistoryData>(50);
 		timeElapsedCache = 0;
 		totalDistanceCache = 0.0;
 		timeRatio = 1;
 		state = State.STOPPED;
+		runner = user;
 	}
 
 	/**
@@ -88,14 +93,26 @@ public class Session {
 	 *
 	 * @return current speed in tenths of a mile per hour
 	 */
-	public int getSpeed() { return currentValues.getSpeed(); }
+	public int getSpeed() throws UserFellOffException {
+		try {
+			return runner.getSpeed();
+		} catch (UserFellOffException e) {
+			stop();
+			throw e;
+		}
+	}
 	/**
 	 * Total distance run.
 	 *
 	 * @return distance run in miles
 	 */
-	public double getDistance() {
-		return totalDistanceCache + currentValues.getDistance();
+	public double getDistance() throws UserFellOffException {
+		try {
+			return totalDistanceCache + currentValues.getDistance() + runner.getDistance()/5280.0;
+		} catch (UserFellOffException e) {
+			stop();
+			throw e;
+		}
 	}
 	/**
 	 * Total time spent running
@@ -109,13 +126,13 @@ public class Session {
 	/**
 	 * Calories burnt.
 	 *
-	 * @param weight weight of the runner in pounds
+	 * @param runner Current user of the treadmill
 	 * @return       calories burnt while running
 	 */
-	public int calculateCalories(int weight) {
-		int calories = currentValues.calculateCalories(weight);
+	public int calculateCalories(User runner) {
+		int calories = currentValues.calculateCalories(runner);
 		for (HistoryData curHist : history) {
-			calories += curHist.calculateCalories(weight);
+			calories += curHist.calculateCalories(runner);
 		}
 		return calories;
 	}
