@@ -6,7 +6,7 @@ import java.util.List;
  * the visible "stuff". It knows what the treadmill is doing, what the
  * statistics are, and so forth.
  *
- * @version 0.3
+ * @version 0.4
  */
 public class Session {
 	private List<HistoryData> history;
@@ -34,6 +34,7 @@ public class Session {
 	*/
 
 	private User runner;
+	private final double length;
 
 	/**
 	 * State of the treadmill.
@@ -48,9 +49,10 @@ public class Session {
 	 * Sets up the treadmill and puts it in a stopped state. To actually
 	 * start the treadmill, you must call {@link #start(int, int)}.
 	 *
-	 * @param user Current runner on the treadmill
+	 * @param beltLength length of belt in feet
+	 * @param user       current runner on the treadmill
 	 */
-	public Session(User user) {
+	public Session(double beltLength, User user) {
 		// Pre-allocate memory for 50. Nice!
 		history = new ArrayList<HistoryData>(50);
 		timeElapsedCache = 0;
@@ -58,6 +60,7 @@ public class Session {
 		timeRatio = 1;
 		state = State.STOPPED;
 		runner = user;
+		length = beltLength;
 	}
 
 	/**
@@ -94,12 +97,11 @@ public class Session {
 	 * @return current speed in tenths of a mile per hour
 	 */
 	public double getSpeed() throws UserFellOffException {
-		try {
-			return runner.getSpeed();
-		} catch (UserFellOffException e) {
+		if (!isOnTreadmill()) {
 			stop();
-			throw e;
+			throw new UserFellOffException();
 		}
+		return runner.getSpeed();
 	}
 	/**
 	 * Total distance run.
@@ -107,12 +109,11 @@ public class Session {
 	 * @return distance run in miles
 	 */
 	public double getDistance() throws UserFellOffException {
-		try {
-			return totalDistanceCache + currentValues.getDistance() + runner.getPosition()/5280.0;
-		} catch (UserFellOffException e) {
+		if (!isOnTreadmill()) {
 			stop();
-			throw e;
+			throw new UserFellOffException();
 		}
+		return totalDistanceCache + currentValues.getDistance() + runner.getPosition()/5280.0;
 	}
 	/**
 	 * Total time spent running
@@ -210,5 +211,13 @@ public class Session {
 	private void updateCaches(long timeToAdd, double distToAdd) {
 		timeElapsedCache += timeToAdd;
 		totalDistanceCache += distToAdd;
+	}
+	/**
+	 * Determines if the user is still on the treadmill.
+	 *
+	 * @return If user is on treadmill
+	 */
+	private boolean isOnTreadmill() {
+		return Math.abs(runner.getPosition()) < length / 2.0;
 	}
 }
