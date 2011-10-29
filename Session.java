@@ -48,6 +48,7 @@ public class Session {
 	 * @param timespan amount of time in s since you last called update().
 	 */
 	public void update(double timespan) {
+		if (state != State.RUNNING) return;
 		timeElapsedCache += timespan;
 		currentValues.update(timespan);
 	}
@@ -58,6 +59,7 @@ public class Session {
 	 * @param sp new speed in tenths of a mile per hour
 	 */
 	public void setSpeed(int sp) {
+		if (state == State.STOPPED) return;
 		int inclineSetting = currentValues.getIncline();
 		saveHistoryData();
 		currentValues = new HistoryData(sp, inclineSetting);
@@ -68,6 +70,7 @@ public class Session {
 	 * @param inc new inclination in percent
 	 */
 	public void setIncline(int inc) {
+		if (state == State.STOPPED) return;
 		int speedSetting = currentValues.getSpeed();
 		saveHistoryData();
 		currentValues = new HistoryData(speedSetting, inc);
@@ -79,7 +82,12 @@ public class Session {
 	 *
 	 * @return current inclination in percent
 	 */
-	public int getIncline() { return currentValues.getIncline(); }
+	public int getIncline() {
+		if (state != State.RUNNING) {
+			return 0;
+		}
+		return currentValues.getIncline();
+	}
 	/**
 	 * Speed of the treadmill.
 	 *
@@ -98,6 +106,9 @@ public class Session {
 	 * @return distance run in miles
 	 */
 	public double getDistance() {
+		if (state == State.STOPPED) {
+			return 0.0;
+		}
 		return totalDistanceCache + currentValues.getDistance();
 	}
 	/**
@@ -117,11 +128,14 @@ public class Session {
 	 * @return calories burnt while running
 	 */
 	public int getCalories(int age, int weight) {
-		double calories = currentValues.getCalories(age, weight);
-		for (HistoryData curHist : history) {
-			calories += curHist.getCalories(age, weight);
+		if (state == State.STOPPED) {
+			return 0;
 		}
-		return (int)calories;
+		double cal = currentValues.getCalories(age, weight);
+		for (HistoryData curHist : history) {
+			cal += curHist.getCalories(age, weight);
+		}
+		return (int)cal;
 	}
 
 	/**
@@ -166,10 +180,7 @@ public class Session {
 	 */
 	public void resume() {
 		if (state != State.PAUSED) return;
-		int sp = currentValues.getSpeed();
-		int inc = currentValues.getIncline();
-		saveHistoryData();
-		currentValues = new HistoryData(sp, inc);
+		state = State.RUNNING;
 	}
 
 
