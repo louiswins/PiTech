@@ -93,9 +93,9 @@ public class Session {
 	 *
 	 * @return current speed in tenths of a mile per hour
 	 */
-	public double getSpeed() {
+	public int getSpeed() {
 		if (state != State.RUNNING) {
-			return 0.0;
+			return 0;
 		}
 		return currentValues.getSpeed();
 	}
