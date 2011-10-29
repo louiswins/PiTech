@@ -7,7 +7,7 @@ import java.awt.Font;
 import java.awt.event.*;
 import java.util.ArrayList;
 
-public class SessionTab extends JPanel{
+public class ControlTab extends JPanel{
 	private int timeCurrent, timeElapsed, speedCurrent, speedAverage, inclineCurrent, distanceCurrent, distanceTarget, caloriesCurrent, caloriesTarget;
 	private JButton quickStart_Resume, pause_Stop, reset, goal_Run_Start, speedUp, speedDown, inclineUp, inclineDown;
 	private JPanel panelMessage, panelInputOutput, panelOutputs, panelInputs;
@@ -30,7 +30,7 @@ public class SessionTab extends JPanel{
 	private JRadioButton[] radioButtonsGoalRun;
 
 	
-	public SessionTab(){
+	public ControlTab(){
 		panelInputOutput = new JPanel();
 		panelInputOutput.setLayout(new GridLayout(2,1));
 		

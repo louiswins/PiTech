@@ -16,7 +16,7 @@ public class DisplayInterface extends JApplet
 	private int APPLET_WIDTH = 975, APPLET_HEIGHT = 525;
 
 	private JTabbedPane tPane;
-	private SessionTab myTreadmill;
+	private ControlTab myTreadmill;
 	//private TransferPanel transferPanel;
 	// private Vector accountList;
 
@@ -32,7 +32,7 @@ public class DisplayInterface extends JApplet
 		//    createPanel = new CreatePanel(accountList, transferPanel);
 
 		//create a tabbed pane with two tabs
-		myTreadmill = new SessionTab();
+		myTreadmill = new ControlTab();
 		tPane = new JTabbedPane();
 		tPane.addTab("Treadmill", myTreadmill);
 		// tPane.addTab("Account transfer", transferPanel);
