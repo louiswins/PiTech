@@ -62,14 +62,17 @@ public class HistoryData {
 
 	/**
 	 * Returns the number of calories burnt during the lifetime of the
-	 * object.
+	 * object. Formula is from <a
+	 * href="http://www.runnersworld.com/article/0,7120,s6-242-304-311-8402-0,00.html">Runner's
+	 * World</a>.
 	 *
 	 * @param age    age of user in years
 	 * @param weight weight in lbs
 	 * @return       calories burnt
 	 */
 	// XXX: This calculation is not very good, it should be changed later
-	public int getCalories(int age, int weight) {
-		return (int) (0.75 * weight * duration);
+	// 0.75 * weight * #miles
+	public double getCalories(int age, int weight) {
+		return (0.75 * weight * getDistance());
 	}
 }

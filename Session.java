@@ -117,11 +117,11 @@ public class Session {
 	 * @return calories burnt while running
 	 */
 	public int getCalories(int age, int weight) {
-		int calories = currentValues.getCalories(age, weight);
+		double calories = currentValues.getCalories(age, weight);
 		for (HistoryData curHist : history) {
 			calories += curHist.getCalories(age, weight);
 		}
-		return calories;
+		return (int)calories;
 	}
 
 	/**
