@@ -9,10 +9,15 @@ import java.util.ArrayList;
  * Controls the Session. Shows all the important information and data about the
  * current run session.
  *
- * @version 0.2
+ * <p>Note that in this version, the QuickStart button just adds 10s to the time
+ * run, it doesn't actually do anything with a timer or anything.
+ *
+ * @version 1.0
  */
 public class ControlTab extends JPanel{
-	private int timeCurrent, timeElapsed, speedCurrent, speedAverage, inclineCurrent, distanceCurrent, distanceTarget, caloriesCurrent, caloriesTarget;
+	private int distanceTarget, caloriesTarget;
+	private Session session;
+	private int age, weight;
 
 	/* Buttons */
 	private JButton quickStart_Resume, pause_Stop, reset, goal_Run_Start, speedUp, speedDown, inclineUp, inclineDown;
@@ -36,29 +41,30 @@ public class ControlTab extends JPanel{
 	private Font currentFont;
 	private JTextField textFieldGoalDistance, textFieldGoalDuration, textFieldGoalCalories;
 
+	/* XXX: Should these be here? */
+	/** Maximum speed in tenths of a mile per hour */
+	private static int MAX_SPEED = 150;
+	/** Maximum incline in percent */
+	private static int MAX_INCLINE = 15;
+
 	
 	public ControlTab(){
-		
-		/* Set up the current variables. */
-		timeCurrent = 0; 
-		timeElapsed  = 0;
-		speedCurrent = 0;
-		speedAverage = 0;
-		inclineCurrent = 0;
-		distanceCurrent = 0;
-		distanceTarget = 0;
-		caloriesCurrent = 0;
-		caloriesTarget= 0;
+		ButtonListener bl = new ButtonListener();
 
 		/* Set up buttons */
-		quickStart_Resume = new JButton("QuickStart / Resume");
+		quickStart_Resume = new JButton("QuickStart / Resume (currently, add 10s)");
+		quickStart_Resume.addActionListener(bl);
 		pause_Stop = new JButton("Pause / Stop");
 		reset = new JButton("Reset");
 		goal_Run_Start = new JButton("Goal Run Start");
 		speedUp = new JButton("Speed Up");
+		speedUp.addActionListener(bl);
 		speedDown = new JButton("Speed Down");
+		speedDown.addActionListener(bl);
 		inclineUp = new JButton("Incline Up");
+		inclineUp.addActionListener(bl);
 		inclineDown = new JButton("Incline Down");
+		inclineDown.addActionListener(bl);
 
 		radioButtonsGoalRun = new JRadioButton[3];
 		radioButtonsGoalRun[0] = new JRadioButton("distance", true);
@@ -198,6 +204,34 @@ public class ControlTab extends JPanel{
 		setLayout(new BorderLayout());
 		add(BorderLayout.NORTH, panelMessage);
 		add(BorderLayout.CENTER, panelInputOutput);
+
+
+		/* Set up the current variables. */
+		distanceTarget = 0;
+		caloriesTarget = 0;
+		session = new Session();
+		session.start(100,2);
+		age = 21;
+		weight = 180;
+
+		/* And updates the initial labels. */
+		update();
+	}
+
+
+	/**
+	 * Updates all the labels based on session.
+	 */
+	private void update() {
+		String hr = String.format("%02d", (int)(session.getTimeElapsed() / 3600));
+		String min = String.format("%02d", (int)(session.getTimeElapsed() / 60) % 60);
+		String sec = String.format("%02d", (int)(session.getTimeElapsed()) % 60);
+		labelTimeElapsedVal.setText(hr + ":" + min + ":" + sec);
+		labelSpeedCurVal.setText(Double.toString((double)session.getSpeed() / 10.0) + " mph");
+		labelSpeedAvgVal.setText(String.format("%5.3f mph", session.getAverageSpeed()));
+		labelInclineCurVal.setText(Integer.toString(session.getIncline()) + " %"); 
+		labelDistanceCurVal.setText(String.format("%5.3f miles", session.getDistance()));
+		labelCaloriesCurVal.setText(Integer.toString(session.getCalories(age, weight)));
 	}
 
 
@@ -207,11 +241,42 @@ public class ControlTab extends JPanel{
 	{
 		public void actionPerformed(ActionEvent event)
 		{
-			/*if(event.getSource() == quickStart_Resume){
-				
+			if (event.getSource() == quickStart_Resume) {
+				session.update(10);
+				update();
+			} else if (event.getSource() == speedUp) {
+				int cursp = session.getSpeed();
+				cursp += 1;
+				if (cursp >= MAX_SPEED) {
+					cursp = MAX_SPEED;
+				}
+				session.setSpeed(cursp);
+				update();
+			} else if (event.getSource() == speedDown) {
+				int cursp = session.getSpeed();
+				cursp -= 1;
+				if (cursp <= 0) {
+					cursp = 0;
+				}
+				session.setSpeed(cursp);
+				update();
+			} else if (event.getSource() == inclineUp) {
+				int curinc = session.getIncline();
+				curinc += 1;
+				if (curinc >= MAX_INCLINE) {
+					curinc = MAX_INCLINE;
+				}
+				session.setIncline(curinc);
+				update();
+			} else if (event.getSource() == inclineDown) {
+				int curinc = session.getIncline();
+				curinc -= 1;
+				if (curinc <= 0) {
+					curinc = 0;
+				}
+				session.setIncline(curinc);
+				update();
 			}
-			*/
-			
 		}
 	}
 }

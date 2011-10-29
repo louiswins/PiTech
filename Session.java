@@ -101,6 +101,19 @@ public class Session {
 	}
 
 	/**
+	 * Average speed throughout the session.
+	 *
+	 * @return average speed in miles per hour
+	 */
+	public double getAverageSpeed() {
+		if (timeElapsedCache > 0.0) {
+			return getDistance() * 3600.0 / timeElapsedCache;
+		} else {
+			return (double)getSpeed() / 10.0;
+		}
+	}
+
+	/**
 	 * Total distance run.
 	 *
 	 * @return distance run in miles
