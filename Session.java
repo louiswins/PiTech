@@ -37,6 +37,7 @@ public class Session {
 		history = new ArrayList<HistoryData>(50);
 		timeElapsedCache = 0;
 		totalDistanceCache = 0.0;
+		currentValues = new HistoryData(0, 0);
 		state = State.STOPPED;
 	}
 
@@ -59,9 +60,10 @@ public class Session {
 	 * @param sp new speed in tenths of a mile per hour
 	 */
 	public void setSpeed(int sp) {
-		if (state == State.STOPPED) return;
 		int inclineSetting = currentValues.getIncline();
-		saveHistoryData();
+		if (currentValues.getTime() > 0.0) {
+			saveHistoryData();
+		}
 		currentValues = new HistoryData(sp, inclineSetting);
 	}
 	/**
@@ -70,9 +72,10 @@ public class Session {
 	 * @param inc new inclination in percent
 	 */
 	public void setIncline(int inc) {
-		if (state == State.STOPPED) return;
 		int speedSetting = currentValues.getSpeed();
-		saveHistoryData();
+		if (currentValues.getTime() > 0.0) {
+			saveHistoryData();
+		}
 		currentValues = new HistoryData(speedSetting, inc);
 	}
 
@@ -83,9 +86,6 @@ public class Session {
 	 * @return current inclination in percent
 	 */
 	public int getIncline() {
-		if (state != State.RUNNING) {
-			return 0;
-		}
 		return currentValues.getIncline();
 	}
 	/**
@@ -106,9 +106,6 @@ public class Session {
 	 * @return distance run in miles
 	 */
 	public double getDistance() {
-		if (state == State.STOPPED) {
-			return 0.0;
-		}
 		return totalDistanceCache + currentValues.getDistance();
 	}
 	/**
@@ -145,12 +142,12 @@ public class Session {
 	public void stop() {
 		timeElapsedCache = 0.0;
 		totalDistanceCache = 0.0;
-		currentValues = null;
 		
 		if (state != State.STOPPED) {
 			// If the state is already stopped, no need to
-			// reallocate 50 new HistoryData objects
+			// reallocate new objects
 			history = new ArrayList<HistoryData>(50);
+			currentValues = new HistoryData(0, 0);
 		}
 		state = State.STOPPED;
 	}
@@ -164,6 +161,14 @@ public class Session {
 	public void start(int speed, int incline) {
 		if (state != State.STOPPED) return;
 		currentValues = new HistoryData(speed, incline);
+		state = State.RUNNING;
+	}
+	/**
+	 * Starts the treadmill. If the treadmill is currently running or
+	 * paused, this method has no effect.
+	 */
+	public void start() {
+		if (state != State.STOPPED) return;
 		state = State.RUNNING;
 	}
 	/**
