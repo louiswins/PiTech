@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * <p>Note that in this version, the QuickStart button just adds 10s to the time
  * run, it doesn't actually do anything with a timer or anything.
  *
- * @version 1.0
+ * @version 1.1
  */
 public class ControlTab extends JPanel {
 	private int distanceTarget, caloriesTarget;
@@ -269,7 +269,6 @@ public class ControlTab extends JPanel {
 				if (cursp >= MAX_SPEED) {
 					cursp = MAX_SPEED;
 				}
-				System.err.printf("Setting speed to %d\n", cursp);
 				session.setSpeed(cursp);
 			} else if (src == speedDown) {
 				int cursp = session.getSpeed();

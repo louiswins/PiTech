@@ -6,7 +6,7 @@ import java.util.List;
  * the visible "stuff". It knows what the treadmill is doing, what the
  * statistics are, and so forth.
  *
- * @version 0.5
+ * @version 1.0
  */
 public class Session {
 	private List<HistoryData> history;
@@ -94,9 +94,6 @@ public class Session {
 	 * @return current speed in tenths of a mile per hour
 	 */
 	public int getSpeed() {
-		if (state != State.RUNNING) {
-			return 0;
-		}
 		return currentValues.getSpeed();
 	}
 
