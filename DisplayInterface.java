@@ -23,6 +23,17 @@ public class DisplayInterface extends JApplet
 	 */
 	public void init()
 	{
+		/* The following is from
+		 * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+		 */
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} 
+		catch (UnsupportedLookAndFeelException e) {}
+		catch (ClassNotFoundException e) {}
+		catch (InstantiationException e) {}
+		catch (IllegalAccessException e) {}
+
 		//create a tabbed pane with two tabs
 		myTreadmill = new ControlTab();
 		tPane = new JTabbedPane();
