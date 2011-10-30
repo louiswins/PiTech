@@ -16,7 +16,7 @@ public class DisplayInterface extends JApplet
 	private int APPLET_HEIGHT = 525;
 
 	private JTabbedPane tPane;
-	private ControlTab myTreadmill;
+	private ControlTab controlTab;
 
 	/**
 	 * Initializes the Applet with a Pane of two tabs.
@@ -35,11 +35,11 @@ public class DisplayInterface extends JApplet
 		catch (IllegalAccessException e) {}
 
 		//create a tabbed pane with two tabs
-		myTreadmill = new ControlTab();
+		controlTab = new ControlTab();
 		tPane = new JTabbedPane();
-		tPane.addTab("Treadmill", myTreadmill);
+		tPane.addTab("Treadmill", controlTab);
 
 		getContentPane().add(tPane);
-		setSize (APPLET_WIDTH, APPLET_HEIGHT); //set Applet size
+		setSize(APPLET_WIDTH, APPLET_HEIGHT); //set Applet size
 	}
 }

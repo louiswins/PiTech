@@ -7,7 +7,7 @@
 public class HistoryData {
 	private int speed; // tenths of a mph
 	private int incline; // slope %
-	double duration; // seconds
+	private double duration; // seconds
 
 
 	/**

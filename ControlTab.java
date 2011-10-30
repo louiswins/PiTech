@@ -39,7 +39,7 @@ public class ControlTab extends JPanel {
 
 
 	private int distanceTarget, caloriesTarget;
-	private Session session;
+	private Session myTreadmill;
 	private int age, weight;
 	private int timeMultiplier;
 	private Timer timer;
@@ -215,7 +215,7 @@ public class ControlTab extends JPanel {
 		/* Set up the current variables. */
 		distanceTarget = 0;
 		caloriesTarget = 0;
-		session = new Session();
+		myTreadmill = new Session();
 		age = 21;
 		weight = 180;
 		timeMultiplier = 1;
@@ -235,13 +235,13 @@ public class ControlTab extends JPanel {
 	 * Updates all the labels based on session.
 	 */
 	private void updateLabels() {
-		labelTimeElapsedVal.setText(String.format("%02d:%02d:%02d", (int)(session.getTimeElapsed() / 3600),
-				(int)(session.getTimeElapsed() / 60) % 60, (int)(session.getTimeElapsed()) % 60));
-		labelSpeedCurVal.setText(Double.toString((double)session.getSpeed() / 10.0) + " mph");
-		labelSpeedAvgVal.setText(String.format("%5.3f mph", session.getAverageSpeed()));
-		labelInclineCurVal.setText(Integer.toString(session.getIncline()) + " %"); 
-		labelDistanceCurVal.setText(String.format("%5.3f miles", session.getDistance()));
-		labelCaloriesCurVal.setText(Integer.toString(session.getCalories(age, weight)));
+		labelTimeElapsedVal.setText(String.format("%02d:%02d:%02d", (int)(myTreadmill.getTimeElapsed() / 3600),
+				(int)(myTreadmill.getTimeElapsed() / 60) % 60, (int)(myTreadmill.getTimeElapsed()) % 60));
+		labelSpeedCurVal.setText(Double.toString((double)myTreadmill.getSpeed() / 10.0) + " mph");
+		labelSpeedAvgVal.setText(String.format("%5.3f mph", myTreadmill.getAverageSpeed()));
+		labelInclineCurVal.setText(Integer.toString(myTreadmill.getIncline()) + " %"); 
+		labelDistanceCurVal.setText(String.format("%5.3f miles", myTreadmill.getDistance()));
+		labelCaloriesCurVal.setText(Integer.toString(myTreadmill.getCalories(age, weight)));
 	}
 	
 	/**
@@ -262,48 +262,48 @@ public class ControlTab extends JPanel {
 			if (src == quickStart_Resume) {
 				quickStart_Resume.setText("QuickStart");
 				pause_Stop.setText("Pause");
-				if (session.getState() == Session.State.STOPPED) {
-					session.start();
+				if (myTreadmill.getState() == Session.State.STOPPED) {
+					myTreadmill.start();
 				} else {
-					session.resume();
+					myTreadmill.resume();
 				}
 			} else if (src == pause_Stop) {
 				pause_Stop.setText("Stop");
-				if (session.getState() == Session.State.RUNNING) {
+				if (myTreadmill.getState() == Session.State.RUNNING) {
 					quickStart_Resume.setText("Resume");
-					session.pause();
+					myTreadmill.pause();
 				} else {
 					quickStart_Resume.setText("QuickStart");
-					session.stop();
+					myTreadmill.stop();
 				}
 			} else if (src == speedUp) {
-				int cursp = session.getSpeed();
+				int cursp = myTreadmill.getSpeed();
 				cursp += 1;
 				if (cursp >= MAX_SPEED) {
 					cursp = MAX_SPEED;
 				}
-				session.setSpeed(cursp);
+				myTreadmill.setSpeed(cursp);
 			} else if (src == speedDown) {
-				int cursp = session.getSpeed();
+				int cursp = myTreadmill.getSpeed();
 				cursp -= 1;
 				if (cursp <= 0) {
 					cursp = 0;
 				}
-				session.setSpeed(cursp);
+				myTreadmill.setSpeed(cursp);
 			} else if (src == inclineUp) {
-				int curinc = session.getIncline();
+				int curinc = myTreadmill.getIncline();
 				curinc += 1;
 				if (curinc >= MAX_INCLINE) {
 					curinc = MAX_INCLINE;
 				}
-				session.setIncline(curinc);
+				myTreadmill.setIncline(curinc);
 			} else if (src == inclineDown) {
-				int curinc = session.getIncline();
+				int curinc = myTreadmill.getIncline();
 				curinc -= 1;
 				if (curinc <= 0) {
 					curinc = 0;
 				}
-				session.setIncline(curinc);
+				myTreadmill.setIncline(curinc);
 			}
 			updateLabels();
 		}
@@ -312,10 +312,10 @@ public class ControlTab extends JPanel {
 	/** Listener for timer events. */
 	private class TimerListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			session.update(1.0 / FPS);
+			myTreadmill.update(1.0 / FPS);
 			updateLabels();
 
-			if (goal.checkIfDone(session)) {
+			if (goal.checkIfDone(myTreadmill)) {
 				writeMessage("Goal has been met!");
 			} else {
 				writeMessage(DEFAULT_MESSAGE);
