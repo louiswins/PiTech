@@ -1,7 +1,7 @@
 public class DistanceGoal implements Goal {
-	private int goal;
+	private double goal;
 
-	public DistanceGoal(int dist) {
+	public DistanceGoal(double dist) {
 		goal = dist;
 	}
 

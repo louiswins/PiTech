@@ -15,12 +15,6 @@ import java.util.ArrayList;
  * @version 1.1
  */
 public class ControlTab extends JPanel {
-	private int distanceTarget, caloriesTarget;
-	private Session session;
-	private int age, weight;
-	private int timeMultiplier;
-	private Timer timer;
-
 	/* Buttons */
 	private JButton quickStart_Resume, pause_Stop, goal_Run_Start, speedUp, speedDown, inclineUp, inclineDown;
 	private JRadioButton[] radioButtonsGoalRun;
@@ -43,12 +37,22 @@ public class ControlTab extends JPanel {
 	private Font currentFont;
 	private JTextField textFieldGoalDistance, textFieldGoalDuration, textFieldGoalCalories;
 
+
+	private int distanceTarget, caloriesTarget;
+	private Session session;
+	private int age, weight;
+	private int timeMultiplier;
+	private Timer timer;
+	private Goal goal;
+
+
 	/* XXX: Should these be here? */
 	/** Maximum speed in tenths of a mile per hour */
-	private static int MAX_SPEED = 150;
+	private static final int MAX_SPEED = 150;
 	/** Maximum incline in percent */
-	private static int MAX_INCLINE = 15;
-	private static int FPS = 100;
+	private static final int MAX_INCLINE = 15;
+	private static final int FPS = 100;
+	private static final String DEFAULT_MESSAGE = "Welcome to the treadmill machine";
 
 	
 	public ControlTab() {
@@ -90,7 +94,7 @@ public class ControlTab extends JPanel {
 		labelCaloriesCurVal = new JLabel("0"); 
 		labelCaloriesTargVal = new JLabel("0");
 
-		message = new JLabel("Welcome to the treadmill machine");
+		message = new JLabel(DEFAULT_MESSAGE);
 		message.setForeground(Color.blue);
 		currentFont = message.getFont();
 		message.setFont(new Font(currentFont.getFontName(), currentFont.getStyle(), 15));
@@ -216,6 +220,8 @@ public class ControlTab extends JPanel {
 		weight = 180;
 		timeMultiplier = 1;
 
+		goal = new DistanceGoal(0.5);
+
 		timer = new Timer(1000 / FPS, new TimerListener());
 		timer.setInitialDelay(0);
 		timer.start();
@@ -232,10 +238,19 @@ public class ControlTab extends JPanel {
 		labelTimeElapsedVal.setText(String.format("%02d:%02d:%02d", (int)(session.getTimeElapsed() / 3600),
 				(int)(session.getTimeElapsed() / 60) % 60, (int)(session.getTimeElapsed()) % 60));
 		labelSpeedCurVal.setText(Double.toString((double)session.getSpeed() / 10.0) + " mph");
-		labelSpeedAvgVal.setText(String.format("%5.4f mph", session.getAverageSpeed()));
+		labelSpeedAvgVal.setText(String.format("%5.3f mph", session.getAverageSpeed()));
 		labelInclineCurVal.setText(Integer.toString(session.getIncline()) + " %"); 
-		labelDistanceCurVal.setText(String.format("%5.4f miles", session.getDistance()));
+		labelDistanceCurVal.setText(String.format("%5.3f miles", session.getDistance()));
 		labelCaloriesCurVal.setText(Integer.toString(session.getCalories(age, weight)));
+	}
+	
+	/**
+	 * Writes a message to the messagebox.
+	 *
+	 * @param msg the message to write
+	 */
+	private void writeMessage(String msg) {
+		message.setText(msg);
 	}
 
 
@@ -299,6 +314,12 @@ public class ControlTab extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			session.update(1.0 / FPS);
 			updateLabels();
+
+			if (goal.checkIfDone(session)) {
+				writeMessage("Goal has been met!");
+			} else {
+				writeMessage(DEFAULT_MESSAGE);
+			}
 		}
 	}
 }
