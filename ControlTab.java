@@ -22,7 +22,7 @@ public class ControlTab extends JPanel {
 	private Timer timer;
 
 	/* Buttons */
-	private JButton quickStart_Resume, pause_Stop, reset, goal_Run_Start, speedUp, speedDown, inclineUp, inclineDown;
+	private JButton quickStart_Resume, pause_Stop, goal_Run_Start, speedUp, speedDown, inclineUp, inclineDown;
 	private JRadioButton[] radioButtonsGoalRun;
 	private ButtonGroup myButtonGroup;
 
@@ -59,7 +59,6 @@ public class ControlTab extends JPanel {
 		quickStart_Resume.addActionListener(bl);
 		pause_Stop = new JButton("Stop");
 		pause_Stop.addActionListener(bl);
-		reset = new JButton("Reset");
 		goal_Run_Start = new JButton("Goal Run Start");
 		speedUp = new JButton("Speed Up");
 		speedUp.addActionListener(bl);
@@ -156,10 +155,9 @@ public class ControlTab extends JPanel {
 		/* Inputs */
 		/* Basic functions: left */
 		panelBasicFunc = new JPanel();
-		panelBasicFunc.setLayout(new GridLayout(3,1));
+		panelBasicFunc.setLayout(new GridLayout(2,1));
 		panelBasicFunc.add(quickStart_Resume);
 		panelBasicFunc.add(pause_Stop);
-		panelBasicFunc.add(reset);
 		
 		/* Goals & speed/incline controls: right */
 		panelDistanceRadio = new JPanel();
