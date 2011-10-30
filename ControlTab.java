@@ -14,10 +14,12 @@ import java.util.ArrayList;
  *
  * @version 1.0
  */
-public class ControlTab extends JPanel{
+public class ControlTab extends JPanel {
 	private int distanceTarget, caloriesTarget;
 	private Session session;
 	private int age, weight;
+	private int timeMultiplier;
+	private Timer timer;
 
 	/* Buttons */
 	private JButton quickStart_Resume, pause_Stop, reset, goal_Run_Start, speedUp, speedDown, inclineUp, inclineDown;
@@ -46,15 +48,17 @@ public class ControlTab extends JPanel{
 	private static int MAX_SPEED = 150;
 	/** Maximum incline in percent */
 	private static int MAX_INCLINE = 15;
+	private static int FPS = 100;
 
 	
-	public ControlTab(){
+	public ControlTab() {
 		ButtonListener bl = new ButtonListener();
 
 		/* Set up buttons */
-		quickStart_Resume = new JButton("QuickStart / Resume (currently, add 10s)");
+		quickStart_Resume = new JButton("QuickStart");
 		quickStart_Resume.addActionListener(bl);
-		pause_Stop = new JButton("Pause / Stop");
+		pause_Stop = new JButton("Stop");
+		pause_Stop.addActionListener(bl);
 		reset = new JButton("Reset");
 		goal_Run_Start = new JButton("Goal Run Start");
 		speedUp = new JButton("Speed Up");
@@ -210,73 +214,94 @@ public class ControlTab extends JPanel{
 		distanceTarget = 0;
 		caloriesTarget = 0;
 		session = new Session();
-		session.start(100,2);
 		age = 21;
 		weight = 180;
+		timeMultiplier = 1;
 
-		/* And updates the initial labels. */
-		update();
+		timer = new Timer(1000 / FPS, new TimerListener());
+		timer.setInitialDelay(0);
+		timer.start();
+
+		/* And update the initial labels. */
+		updateLabels();
 	}
 
 
 	/**
 	 * Updates all the labels based on session.
 	 */
-	private void update() {
-		String hr = String.format("%02d", (int)(session.getTimeElapsed() / 3600));
-		String min = String.format("%02d", (int)(session.getTimeElapsed() / 60) % 60);
-		String sec = String.format("%02d", (int)(session.getTimeElapsed()) % 60);
-		labelTimeElapsedVal.setText(hr + ":" + min + ":" + sec);
+	private void updateLabels() {
+		labelTimeElapsedVal.setText(String.format("%02d:%02d:%02d", (int)(session.getTimeElapsed() / 3600),
+				(int)(session.getTimeElapsed() / 60) % 60, (int)(session.getTimeElapsed()) % 60));
 		labelSpeedCurVal.setText(Double.toString((double)session.getSpeed() / 10.0) + " mph");
-		labelSpeedAvgVal.setText(String.format("%5.3f mph", session.getAverageSpeed()));
+		labelSpeedAvgVal.setText(String.format("%5.4f mph", session.getAverageSpeed()));
 		labelInclineCurVal.setText(Integer.toString(session.getIncline()) + " %"); 
-		labelDistanceCurVal.setText(String.format("%5.3f miles", session.getDistance()));
+		labelDistanceCurVal.setText(String.format("%5.4f miles", session.getDistance()));
 		labelCaloriesCurVal.setText(Integer.toString(session.getCalories(age, weight)));
 	}
 
 
 
 	/** Listener for button events */
-	private class ButtonListener implements ActionListener
-	{
-		public void actionPerformed(ActionEvent event)
-		{
-			if (event.getSource() == quickStart_Resume) {
-				session.update(10);
-				update();
-			} else if (event.getSource() == speedUp) {
+	private class ButtonListener implements ActionListener {
+		public void actionPerformed(ActionEvent event) {
+			Object src = event.getSource();
+			if (src == quickStart_Resume) {
+				quickStart_Resume.setText("QuickStart");
+				pause_Stop.setText("Pause");
+				if (session.getState() == Session.State.STOPPED) {
+					session.start();
+				} else {
+					session.resume();
+				}
+			} else if (src == pause_Stop) {
+				pause_Stop.setText("Stop");
+				if (session.getState() == Session.State.RUNNING) {
+					quickStart_Resume.setText("Resume");
+					session.pause();
+				} else {
+					quickStart_Resume.setText("QuickStart");
+					session.stop();
+				}
+			} else if (src == speedUp) {
 				int cursp = session.getSpeed();
 				cursp += 1;
 				if (cursp >= MAX_SPEED) {
 					cursp = MAX_SPEED;
 				}
+				System.err.printf("Setting speed to %d\n", cursp);
 				session.setSpeed(cursp);
-				update();
-			} else if (event.getSource() == speedDown) {
+			} else if (src == speedDown) {
 				int cursp = session.getSpeed();
 				cursp -= 1;
 				if (cursp <= 0) {
 					cursp = 0;
 				}
 				session.setSpeed(cursp);
-				update();
-			} else if (event.getSource() == inclineUp) {
+			} else if (src == inclineUp) {
 				int curinc = session.getIncline();
 				curinc += 1;
 				if (curinc >= MAX_INCLINE) {
 					curinc = MAX_INCLINE;
 				}
 				session.setIncline(curinc);
-				update();
-			} else if (event.getSource() == inclineDown) {
+			} else if (src == inclineDown) {
 				int curinc = session.getIncline();
 				curinc -= 1;
 				if (curinc <= 0) {
 					curinc = 0;
 				}
 				session.setIncline(curinc);
-				update();
 			}
+			updateLabels();
+		}
+	}
+
+	/** Listener for timer events. */
+	private class TimerListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			session.update(1.0 / FPS);
+			updateLabels();
 		}
 	}
 }

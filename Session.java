@@ -149,6 +149,15 @@ public class Session {
 	}
 
 	/**
+	 * Current state of the treadmill.
+	 *
+	 * @return state of the treadmill
+	 */
+	public State getState() {
+		return state;
+	}
+
+	/**
 	 * Stops the treadmill. Forgets all of the session data including time
 	 * elapsed, distance run, etc.
 	 */
