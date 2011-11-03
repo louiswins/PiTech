@@ -26,17 +26,21 @@ public class ControlTab extends JPanel {
 	private JPanel panelSpeedIncline;
 	private JPanel panelTime, panelSpeed, panelIncline, panelDistance, panelCalories;
 	private JPanel panelDistanceRadio, panelDurationRadio, panelCaloriesRadio;
+	private JPanel panelGoals; ///
+	private JPanel[] panelSpeedArray, panelTimeArray, panelInclinationArray, panelDistanceArray, panelCalorieArray;
 
 	/* Labels */
 	private JLabel labelTimeCurVal, labelTimeElapsedVal, labelSpeedCurVal, labelSpeedAvgVal;
 	private JLabel labelInclineCurVal, labelDistanceCurVal, labelDistanceTargVal, labelCaloriesCurVal, labelCaloriesTargVal;
 	private JLabel message;
+	private JLabel time, speed, inclination, distance, calories;		///
 
 	/* Misc */
 	private Border blackline;
 	private Font currentFont;
 	private JTextField textFieldGoalDistance, textFieldGoalDuration, textFieldGoalCalories;
-
+	private JTextField goalTextField; 	///
+	private JSeparator mySeparator;		///
 
 	private int distanceTarget, caloriesTarget;
 	private Session myTreadmill;
@@ -52,7 +56,7 @@ public class ControlTab extends JPanel {
 	/** Maximum incline in percent */
 	private static final int MAX_INCLINE = 15;
 	private static final int FPS = 100;
-	private static final String DEFAULT_MESSAGE = "Welcome to the treadmill machine";
+	private static final String DEFAULT_MESSAGE = "Welcome to the PiTech Treadmill Simulator!";
 
 	
 	public ControlTab() {
@@ -84,15 +88,15 @@ public class ControlTab extends JPanel {
 		
 		
 		/* Set up labels */
-		labelTimeCurVal  = new JLabel("00:00:00");
-		labelTimeElapsedVal = new JLabel("00:00:00");
-		labelSpeedCurVal = new JLabel("0");
-		labelSpeedAvgVal = new JLabel("0");
-		labelInclineCurVal = new JLabel("0"); 
-		labelDistanceCurVal = new JLabel("0 mi"); 
-		labelDistanceTargVal = new JLabel("0 mi"); 
-		labelCaloriesCurVal = new JLabel("0"); 
-		labelCaloriesTargVal = new JLabel("0");
+		labelTimeCurVal  = new JLabel("00:00:00", JLabel.CENTER);
+		labelTimeElapsedVal = new JLabel("00:00:00", JLabel.CENTER);
+		labelSpeedCurVal = new JLabel("0", JLabel.CENTER);
+		labelSpeedAvgVal = new JLabel("0", JLabel.CENTER);
+		labelInclineCurVal = new JLabel("0", JLabel.CENTER); 
+		labelDistanceCurVal = new JLabel("0 mi", JLabel.CENTER); 
+		labelDistanceTargVal = new JLabel("0 mi", JLabel.CENTER); 
+		labelCaloriesCurVal = new JLabel("0 cal", JLabel.CENTER); 
+		labelCaloriesTargVal = new JLabel("0 cal", JLabel.CENTER);
 
 		message = new JLabel(DEFAULT_MESSAGE);
 		message.setForeground(Color.blue);
@@ -113,46 +117,138 @@ public class ControlTab extends JPanel {
 		panelMessage.add(message);
 
 
-		/* Outputs */
+		/* Outputs */		
+/*		time = new JLabel("TIME"); 
 		panelTime = new JPanel(); 
 		panelTime.setLayout(new GridLayout(5,1));
-		panelTime.add(new JLabel("Current Time"));
+		panelTime.add(time);
+		panelTime.add(new JLabel("Current"));
 		panelTime.add(labelTimeCurVal);
-		panelTime.add(new JLabel("Elapsed Time"));
+		panelTime.add(new JLabel("Elapsed"));
 		panelTime.add(labelTimeElapsedVal);
-
+*/
+		
+		panelTime = new JPanel();
+///		panelTime.setBorder(BorderFactory.createLineBorder(Color.black));
+		panelTime.setLayout(new GridLayout(5,1));
+		panelTimeArray = new JPanel[5];
+		for(int i =0; i< 5; i++){
+			panelTimeArray[i] = new JPanel();
+			panelTimeArray[i].setLayout(new BorderLayout());
+			panelTime.add(panelTimeArray[i]);
+		}
+		panelTimeArray[0].add(new JLabel("TIME", JLabel.CENTER), BorderLayout.CENTER);
+		panelTimeArray[1].add(new JLabel("Elapsed", JLabel.CENTER), BorderLayout.SOUTH);
+		panelTimeArray[2].add(labelTimeElapsedVal, BorderLayout.NORTH);
+		panelTimeArray[3].add(new JLabel("Target", JLabel.CENTER), BorderLayout.SOUTH);
+		panelTimeArray[4].add(labelTimeCurVal, BorderLayout.NORTH);
+		
+/*		speed = new JLabel("SPEED"); 
 		panelSpeed = new JPanel(); 
 		panelSpeed.setLayout(new GridLayout(5,1));
-		panelSpeed.add(new JLabel("Current Speed"));
+		panelSpeed.add(speed);
+		panelSpeed.add(new JLabel("Current"));
 		panelSpeed.add(labelSpeedCurVal);
-		panelSpeed.add(new JLabel("Average Speed"));
+		panelSpeed.add(new JLabel("Average"));
 		panelSpeed.add(labelSpeedAvgVal);
+*/
+		
+		panelSpeed = new JPanel();
+		panelSpeed.setLayout(new GridLayout(5,1));
+		panelSpeedArray = new JPanel[5];
+		for(int i =0; i< 5; i++){
+			panelSpeedArray[i] = new JPanel();
+			panelSpeedArray[i].setLayout(new BorderLayout());
+			panelSpeed.add(panelSpeedArray[i]);
+		}
+		panelSpeedArray[0].add(new JLabel("SPEED", JLabel.CENTER), BorderLayout.CENTER);
+		panelSpeedArray[1].add(new JLabel("Current", JLabel.CENTER), BorderLayout.SOUTH);
+		panelSpeedArray[2].add(labelSpeedCurVal, BorderLayout.NORTH);
+		panelSpeedArray[3].add(new JLabel("Average", JLabel.CENTER), BorderLayout.SOUTH);
+		panelSpeedArray[4].add(labelSpeedAvgVal, BorderLayout.NORTH);
+		
 
+	/*	inclination = new JLabel("INCLINATION"); 
 		panelIncline = new JPanel(); 
 		panelIncline.setLayout(new GridLayout(5,1));
-		panelIncline.add(new JLabel("Current Incline"));
+		panelIncline.add(inclination);
+		panelIncline.add(new JLabel("Current"));
 		panelIncline.add(labelInclineCurVal);
+*/
+		
+		panelIncline = new JPanel();
+		panelIncline.setLayout(new GridLayout(5,1));
+		panelInclinationArray = new JPanel[5];
+		for(int i =0; i< 5; i++){
+			panelInclinationArray[i] = new JPanel();
+			panelInclinationArray[i].setLayout(new BorderLayout());
+			panelIncline.add(panelInclinationArray[i]);
+		}
+		panelInclinationArray[0].add(new JLabel("INCLINATION", JLabel.CENTER), BorderLayout.CENTER);
+		panelInclinationArray[1].add(new JLabel("Current", JLabel.CENTER), BorderLayout.SOUTH);
+		panelInclinationArray[2].add(labelInclineCurVal, BorderLayout.NORTH);
 
+		
+/*		distance = new JLabel("DISTANCE"); 
 		panelDistance = new JPanel(); 
 		panelDistance.setLayout(new GridLayout(5,1));
-		panelDistance.add(new JLabel("Current Distance"));
+		panelDistance.add(distance);
+		panelDistance.add(new JLabel("Current"));
 		panelDistance.add(labelDistanceCurVal);
-		panelDistance.add(new JLabel("Target Distance"));
+		panelDistance.add(new JLabel("Target"));
 		panelDistance.add(labelDistanceTargVal);
+*/
+		panelDistance = new JPanel();
+		panelDistance.setLayout(new GridLayout(5,1));
+		panelDistanceArray = new JPanel[5];
+		for(int i =0; i< 5; i++){
+			panelDistanceArray[i] = new JPanel();
+			panelDistanceArray[i].setLayout(new BorderLayout());
+			panelDistance.add(panelDistanceArray[i]);
+		}
+		panelDistanceArray[0].add(new JLabel("DISTANCE", JLabel.CENTER), BorderLayout.CENTER);
+		panelDistanceArray[1].add(new JLabel("Current", JLabel.CENTER), BorderLayout.SOUTH);
+		panelDistanceArray[2].add(labelDistanceCurVal, BorderLayout.NORTH);
+		panelDistanceArray[3].add(new JLabel("Target", JLabel.CENTER), BorderLayout.SOUTH);
+		panelDistanceArray[4].add(labelDistanceTargVal, BorderLayout.NORTH);
 		
+/*		calories = new JLabel("CALORIES"); 
 		panelCalories = new JPanel(); 
 		panelCalories.setLayout(new GridLayout(5,1));
-		panelCalories.add(new JLabel("Current Calories"));
+		panelCalories.add(calories);
+		panelCalories.add(new JLabel("Current"));
 		panelCalories.add(labelCaloriesCurVal);
-		panelCalories.add(new JLabel("Target Calories"));
+		panelCalories.add(new JLabel("Target"));
 		panelCalories.add(labelCaloriesTargVal);
-
+*/
+		
+		panelCalories = new JPanel();
+		panelCalories.setLayout(new GridLayout(5,1));
+		panelCalorieArray = new JPanel[5];
+		for(int i =0; i< 5; i++){
+			panelCalorieArray[i] = new JPanel();
+			panelCalorieArray[i].setLayout(new BorderLayout());
+			panelCalories.add(panelCalorieArray[i]);
+		}
+		panelCalorieArray[0].add(new JLabel("CALORIES BURNED", JLabel.CENTER), BorderLayout.CENTER);
+		panelCalorieArray[1].add(new JLabel("Current", JLabel.CENTER), BorderLayout.SOUTH);
+		panelCalorieArray[2].add(labelCaloriesCurVal, BorderLayout.NORTH);
+		panelCalorieArray[3].add(new JLabel("Target", JLabel.CENTER), BorderLayout.SOUTH);
+		panelCalorieArray[4].add(labelCaloriesTargVal, BorderLayout.NORTH);
+		
+		
+//		mySeparator = new JSeparator(SwingConstants.VERTICAL);
+//		mySeparator.setSize(30, 40);
 		panelOutputs = new JPanel(); 
 		panelOutputs.setLayout(new GridLayout(1,5));
 		panelOutputs.add(panelTime);
+//		panelOutputs.add(new JSeparator(SwingConstants.VERTICAL));
 		panelOutputs.add(panelSpeed);
+//		panelOutputs.add(new JSeparator(SwingConstants.VERTICAL));
 		panelOutputs.add(panelIncline);
+//		panelOutputs.add(new JSeparator(SwingConstants.VERTICAL));
 		panelOutputs.add(panelDistance);
+//		panelOutputs.add(new JSeparator(SwingConstants.VERTICAL));
 		panelOutputs.add(panelCalories);
 		
 
@@ -164,7 +260,7 @@ public class ControlTab extends JPanel {
 		panelBasicFunc.add(pause_Stop);
 		
 		/* Goals & speed/incline controls: right */
-		panelDistanceRadio = new JPanel();
+/*		panelDistanceRadio = new JPanel();
 		panelDistanceRadio.setLayout(new GridLayout(1,2));		
 		panelDistanceRadio.add(radioButtonsGoalRun[0]);
 		panelDistanceRadio.add(textFieldGoalDistance);
@@ -183,22 +279,41 @@ public class ControlTab extends JPanel {
 		panelSpeedIncline.add(inclineUp);
 		panelSpeedIncline.add(speedDown);
 		panelSpeedIncline.add(inclineDown);
+*/
 //		panelSpeedIncline.add(labelSpeed);
 //		panelSpeedIncline.add(labelIncline);
 
-		panelGoalStart = new JPanel();
+/*		panelGoalStart = new JPanel();
 		panelGoalStart.setLayout(new GridLayout(5,1));
 		panelGoalStart.add(goal_Run_Start);
 		panelGoalStart.add(panelDistanceRadio);
 		panelGoalStart.add(panelDurationRadio);
 		panelGoalStart.add(panelCaloriesRadio);
 		panelGoalStart.add(panelSpeedIncline);
+*/
+		goalTextField = new JTextField(20);
+		panelGoals = new JPanel();
+		panelGoals.setLayout(new GridLayout(5,1));
+		panelGoals.add(goal_Run_Start);
+		panelGoals.add(radioButtonsGoalRun[0]);
+		panelGoals.add(radioButtonsGoalRun[1]);
+		panelGoals.add(radioButtonsGoalRun[2]);
+		panelGoals.add(goalTextField);
 
+		panelSpeedIncline = new JPanel();
+		panelSpeedIncline.setLayout(new GridLayout(4,1));
+		panelSpeedIncline.add(speedUp);
+		panelSpeedIncline.add(speedDown);
+		panelSpeedIncline.add(inclineUp);
+		panelSpeedIncline.add(inclineDown);
+		
 		/* All inputs */
 		panelInputs = new JPanel(); 
 		panelInputs.setLayout(new GridLayout(1,2));
 		panelInputs.add(panelBasicFunc);
-		panelInputs.add(panelGoalStart);
+///		panelInputs.add(panelGoalStart);
+		panelInputs.add(panelGoals);
+		panelInputs.add(panelSpeedIncline);
 		
 		
 		/* Bring it all together */
@@ -312,7 +427,7 @@ public class ControlTab extends JPanel {
 	/** Listener for timer events. */
 	private class TimerListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			myTreadmill.update(1.0 / FPS);
+			myTreadmill.update(1.0 / FPS * timeMultiplier);
 			updateLabels();
 
 			if (goal.checkIfDone(myTreadmill)) {
@@ -323,3 +438,4 @@ public class ControlTab extends JPanel {
 		}
 	}
 }
+
