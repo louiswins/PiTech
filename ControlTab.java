@@ -426,8 +426,16 @@ public class ControlTab extends JPanel {
 
 	/** Listener for timer events. */
 	private class TimerListener implements ActionListener {
+		private long lastCall;
+		
+		public TimerListener() {
+			super();
+			lastCall = System.currentTimeMillis();
+		}
+		
 		public void actionPerformed(ActionEvent e) {
-			myTreadmill.update(1.0 / FPS * timeMultiplier);
+			long curTime = System.currentTimeMillis();
+			myTreadmill.update((double)(curTime - lastCall) / 1000.0 * timeMultiplier);
 			updateLabels();
 
 			if (goal.checkIfDone(myTreadmill)) {
@@ -435,6 +443,7 @@ public class ControlTab extends JPanel {
 			} else {
 				writeMessage(DEFAULT_MESSAGE);
 			}
+			lastCall = curTime;
 		}
 	}
 }
