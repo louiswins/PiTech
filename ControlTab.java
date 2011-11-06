@@ -253,7 +253,7 @@ public class ControlTab extends JPanel {
 		myTreadmill = new Session();
 		age = 21;
 		weight = 180;
-		timeMultiplier = 1;
+		timeMultiplier = 4;
 
 		goal = new DistanceGoal(0.5);
 
