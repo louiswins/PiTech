@@ -2,6 +2,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.*;
 import java.awt.Font;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -17,7 +18,8 @@ import java.util.ArrayList;
  */
 public class ControlTab extends JPanel {
 	/* Buttons */
-	private JButton quickStart_Resume, pause_Stop, goal_Run_Start, speedUp, speedDown, inclineUp, inclineDown;
+	private JButton quickStart_Resume, pause_Stop, goal_Run_Start;
+	private JSpinner sSpeed, sIncline;
 	private JRadioButton[] radioButtonsGoalRun;
 	private ButtonGroup myButtonGroup;
 
@@ -27,21 +29,21 @@ public class ControlTab extends JPanel {
 	private JPanel panelSpeedIncline;
 	private JPanel panelTime, panelSpeed, panelIncline, panelDistance, panelCalories;
 	private JPanel panelDistanceRadio, panelDurationRadio, panelCaloriesRadio;
-	private JPanel panelGoals; ///
+	private JPanel panelGoals;
 	private JPanel[] panelSpeedArray, panelTimeArray, panelInclinationArray, panelDistanceArray, panelCalorieArray;
 
 	/* Labels */
 	private JLabel labelTimeCurVal, labelTimeElapsedVal, labelSpeedCurVal, labelSpeedAvgVal;
 	private JLabel labelInclineCurVal, labelDistanceCurVal, labelDistanceTargVal, labelCaloriesCurVal, labelCaloriesTargVal;
 	private JLabel message;
-	private JLabel time, speed, inclination, distance, calories;		///
+	private JLabel time, speed, inclination, distance, calories;
 
 	/* Misc */
 	private Border blackline;
 	private Font currentFont;
 	private JTextField textFieldGoalDistance, textFieldGoalDuration, textFieldGoalCalories;
-	private JTextField goalTextField; 	///
-	private JSeparator mySeparator;		///
+	private JTextField goalTextField;
+	private JSeparator mySeparator;
 
 	private int distanceTarget, caloriesTarget;
 	private Session myTreadmill;
@@ -51,7 +53,6 @@ public class ControlTab extends JPanel {
 	private Goal goal;
 
 
-	/* XXX: Should these be here? */
 	/** Maximum speed in tenths of a mile per hour */
 	private static final int MAX_SPEED = 150;
 	/** Maximum incline in percent */
@@ -69,14 +70,14 @@ public class ControlTab extends JPanel {
 		pause_Stop = new JButton("Stop");
 		pause_Stop.addActionListener(bl);
 		goal_Run_Start = new JButton("Goal Run Start");
-		speedUp = new JButton("Speed Up");
-		speedUp.addActionListener(bl);
-		speedDown = new JButton("Speed Down");
-		speedDown.addActionListener(bl);
-		inclineUp = new JButton("Incline Up");
-		inclineUp.addActionListener(bl);
-		inclineDown = new JButton("Incline Down");
-		inclineDown.addActionListener(bl);
+
+		SpinnerListener sl = new SpinnerListener();
+		sSpeed = new JSpinner(new SpinnerNumberModel(0.0, 0.0, (double)MAX_SPEED/10.0, 0.1));
+		sSpeed.setEditor(new JSpinner.NumberEditor(sSpeed, "#0.0"));
+		sSpeed.addChangeListener(sl);
+		sIncline = new JSpinner(new SpinnerNumberModel(0, 0, MAX_INCLINE, 1));
+		sIncline.setEditor(new JSpinner.NumberEditor(sIncline, "#0"));
+		sIncline.addChangeListener(sl);
 
 		radioButtonsGoalRun = new JRadioButton[3];
 		radioButtonsGoalRun[0] = new JRadioButton("distance", true);
@@ -120,7 +121,6 @@ public class ControlTab extends JPanel {
 
 		/* Outputs */		
 		panelTime = new JPanel();
-///		panelTime.setBorder(BorderFactory.createLineBorder(Color.black));
 		panelTime.setLayout(new GridLayout(5,1));
 		panelTimeArray = new JPanel[5];
 		for(int i =0; i< 5; i++){
@@ -224,17 +224,16 @@ public class ControlTab extends JPanel {
 		panelGoals.add(goalTextField);
 
 		panelSpeedIncline = new JPanel();
-		panelSpeedIncline.setLayout(new GridLayout(4,1));
-		panelSpeedIncline.add(speedUp);
-		panelSpeedIncline.add(speedDown);
-		panelSpeedIncline.add(inclineUp);
-		panelSpeedIncline.add(inclineDown);
-		
+		panelSpeedIncline.setLayout(new GridLayout(2,2));
+		panelSpeedIncline.add(new JLabel("Speed: "));
+		panelSpeedIncline.add(sSpeed);
+		panelSpeedIncline.add(new JLabel("Incline: "));
+		panelSpeedIncline.add(sIncline);
+
 		/* All inputs */
 		panelInputs = new JPanel(); 
 		panelInputs.setLayout(new GridLayout(1,2));
 		panelInputs.add(panelBasicFunc);
-///		panelInputs.add(panelGoalStart);
 		panelInputs.add(panelGoals);
 		panelInputs.add(panelSpeedIncline);
 		
@@ -293,7 +292,7 @@ public class ControlTab extends JPanel {
 
 
 
-	/** Listener for button events */
+	/** Listener for button events. */
 	private class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			Object src = event.getSource();
@@ -314,34 +313,20 @@ public class ControlTab extends JPanel {
 					quickStart_Resume.setText("QuickStart");
 					myTreadmill.stop();
 				}
-			} else if (src == speedUp) {
-				int cursp = myTreadmill.getSpeed();
-				cursp += 1;
-				if (cursp >= MAX_SPEED) {
-					cursp = MAX_SPEED;
-				}
-				myTreadmill.setSpeed(cursp);
-			} else if (src == speedDown) {
-				int cursp = myTreadmill.getSpeed();
-				cursp -= 1;
-				if (cursp <= 0) {
-					cursp = 0;
-				}
-				myTreadmill.setSpeed(cursp);
-			} else if (src == inclineUp) {
-				int curinc = myTreadmill.getIncline();
-				curinc += 1;
-				if (curinc >= MAX_INCLINE) {
-					curinc = MAX_INCLINE;
-				}
-				myTreadmill.setIncline(curinc);
-			} else if (src == inclineDown) {
-				int curinc = myTreadmill.getIncline();
-				curinc -= 1;
-				if (curinc <= 0) {
-					curinc = 0;
-				}
-				myTreadmill.setIncline(curinc);
+			}
+			updateLabels();
+		}
+	}
+
+	/** Listener for spinner events. */
+	private class SpinnerListener implements ChangeListener {
+		public void stateChanged(ChangeEvent e) {
+			JSpinner sp = (JSpinner)e.getSource();
+			Number val = (Number)sp.getValue();
+			if (sp == sSpeed) {
+				myTreadmill.setSpeed(Math.round(10*val.floatValue()));
+			} else if (sp == sIncline) {
+				myTreadmill.setIncline(val.intValue());
 			}
 			updateLabels();
 		}
@@ -370,4 +355,3 @@ public class ControlTab extends JPanel {
 		}
 	}
 }
-
