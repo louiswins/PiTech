@@ -118,16 +118,6 @@ public class ControlTab extends JPanel {
 
 
 		/* Outputs */		
-/*		time = new JLabel("TIME"); 
-		panelTime = new JPanel(); 
-		panelTime.setLayout(new GridLayout(5,1));
-		panelTime.add(time);
-		panelTime.add(new JLabel("Current"));
-		panelTime.add(labelTimeCurVal);
-		panelTime.add(new JLabel("Elapsed"));
-		panelTime.add(labelTimeElapsedVal);
-*/
-		
 		panelTime = new JPanel();
 ///		panelTime.setBorder(BorderFactory.createLineBorder(Color.black));
 		panelTime.setLayout(new GridLayout(5,1));
@@ -143,16 +133,6 @@ public class ControlTab extends JPanel {
 		panelTimeArray[3].add(new JLabel("Target", JLabel.CENTER), BorderLayout.SOUTH);
 		panelTimeArray[4].add(labelTimeCurVal, BorderLayout.NORTH);
 		
-/*		speed = new JLabel("SPEED"); 
-		panelSpeed = new JPanel(); 
-		panelSpeed.setLayout(new GridLayout(5,1));
-		panelSpeed.add(speed);
-		panelSpeed.add(new JLabel("Current"));
-		panelSpeed.add(labelSpeedCurVal);
-		panelSpeed.add(new JLabel("Average"));
-		panelSpeed.add(labelSpeedAvgVal);
-*/
-		
 		panelSpeed = new JPanel();
 		panelSpeed.setLayout(new GridLayout(5,1));
 		panelSpeedArray = new JPanel[5];
@@ -167,15 +147,6 @@ public class ControlTab extends JPanel {
 		panelSpeedArray[3].add(new JLabel("Average", JLabel.CENTER), BorderLayout.SOUTH);
 		panelSpeedArray[4].add(labelSpeedAvgVal, BorderLayout.NORTH);
 		
-
-	/*	inclination = new JLabel("INCLINATION"); 
-		panelIncline = new JPanel(); 
-		panelIncline.setLayout(new GridLayout(5,1));
-		panelIncline.add(inclination);
-		panelIncline.add(new JLabel("Current"));
-		panelIncline.add(labelInclineCurVal);
-*/
-		
 		panelIncline = new JPanel();
 		panelIncline.setLayout(new GridLayout(5,1));
 		panelInclinationArray = new JPanel[5];
@@ -188,16 +159,6 @@ public class ControlTab extends JPanel {
 		panelInclinationArray[1].add(new JLabel("Current", JLabel.CENTER), BorderLayout.SOUTH);
 		panelInclinationArray[2].add(labelInclineCurVal, BorderLayout.NORTH);
 
-		
-/*		distance = new JLabel("DISTANCE"); 
-		panelDistance = new JPanel(); 
-		panelDistance.setLayout(new GridLayout(5,1));
-		panelDistance.add(distance);
-		panelDistance.add(new JLabel("Current"));
-		panelDistance.add(labelDistanceCurVal);
-		panelDistance.add(new JLabel("Target"));
-		panelDistance.add(labelDistanceTargVal);
-*/
 		panelDistance = new JPanel();
 		panelDistance.setLayout(new GridLayout(5,1));
 		panelDistanceArray = new JPanel[5];
@@ -211,16 +172,6 @@ public class ControlTab extends JPanel {
 		panelDistanceArray[2].add(labelDistanceCurVal, BorderLayout.NORTH);
 		panelDistanceArray[3].add(new JLabel("Target", JLabel.CENTER), BorderLayout.SOUTH);
 		panelDistanceArray[4].add(labelDistanceTargVal, BorderLayout.NORTH);
-		
-/*		calories = new JLabel("CALORIES"); 
-		panelCalories = new JPanel(); 
-		panelCalories.setLayout(new GridLayout(5,1));
-		panelCalories.add(calories);
-		panelCalories.add(new JLabel("Current"));
-		panelCalories.add(labelCaloriesCurVal);
-		panelCalories.add(new JLabel("Target"));
-		panelCalories.add(labelCaloriesTargVal);
-*/
 		
 		panelCalories = new JPanel();
 		panelCalories.setLayout(new GridLayout(5,1));
@@ -260,37 +211,6 @@ public class ControlTab extends JPanel {
 		panelBasicFunc.add(pause_Stop);
 		
 		/* Goals & speed/incline controls: right */
-/*		panelDistanceRadio = new JPanel();
-		panelDistanceRadio.setLayout(new GridLayout(1,2));		
-		panelDistanceRadio.add(radioButtonsGoalRun[0]);
-		panelDistanceRadio.add(textFieldGoalDistance);
-		panelDurationRadio = new JPanel();
-		panelDurationRadio.setLayout(new GridLayout(1,2));
-		panelDurationRadio.add(radioButtonsGoalRun[1]);
-		panelDurationRadio.add(textFieldGoalDuration);
-		panelCaloriesRadio = new JPanel();
-		panelCaloriesRadio.setLayout(new GridLayout(1,2));
-		panelCaloriesRadio.add(radioButtonsGoalRun[2]);
-		panelCaloriesRadio.add(textFieldGoalCalories);
-		
-		panelSpeedIncline = new JPanel();
-		panelSpeedIncline.setLayout(new GridLayout(2,2));
-		panelSpeedIncline.add(speedUp);
-		panelSpeedIncline.add(inclineUp);
-		panelSpeedIncline.add(speedDown);
-		panelSpeedIncline.add(inclineDown);
-*/
-//		panelSpeedIncline.add(labelSpeed);
-//		panelSpeedIncline.add(labelIncline);
-
-/*		panelGoalStart = new JPanel();
-		panelGoalStart.setLayout(new GridLayout(5,1));
-		panelGoalStart.add(goal_Run_Start);
-		panelGoalStart.add(panelDistanceRadio);
-		panelGoalStart.add(panelDurationRadio);
-		panelGoalStart.add(panelCaloriesRadio);
-		panelGoalStart.add(panelSpeedIncline);
-*/
 		goalTextField = new JTextField(20);
 		panelGoals = new JPanel();
 		panelGoals.setLayout(new GridLayout(5,1));
