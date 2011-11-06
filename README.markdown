@@ -2,3 +2,11 @@
 ==================================
 
 PiTech Software Treadmill is a software that will mimic the operations of a treadmill. The user can walk, jog, and run by changing the speed and inclination and may stop or pause at any time. The user will have the ability to manually adjust the settings to target his/her specific goals, such as a specific amount of calories, time, or a certain distance. The software will monitor and calculate distance, calories, and time throughout the workout. The user can have a better estimate of calories burned by inputting age and weight at any time during the session. The user has the choice to select a pre-designed program to work out on a specific fitness goal such as weight loss, endurance, or cardiovascular fitness. The software will have the functionality of saving data and creating a history file, which includes the user’s time, distance, and calories per workout. Treadmill messages will be displayed in the message display section and the treadmill’s user guide can be viewed at any time.
+
+Compiling the program into a jar-file is easy:
+```shell
+javac *.java
+jar cvfe PiTech.jar DisplayInterface *.class
+```
+
+This creates a jar-file called `PiTech.jar` which can be run by executing `java -jar PiTech.jar`.
