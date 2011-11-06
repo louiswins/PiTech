@@ -5,24 +5,24 @@ import java.util.*;
  * Main interface of the program. This class just sets up the window and passes
  * control to the active tab.
  *
- * @version 0.2
+ * @version 0.5
  */
-public class DisplayInterface extends JApplet
+public class DisplayInterface extends JFrame
 {
 
-	/** Default width of applet. */
-	private int APPLET_WIDTH = 975;
-	/** Default height of applet. */
-	private int APPLET_HEIGHT = 525;
+	/** Default width. */
+	private int APP_WIDTH = 975;
+	/** Default height. */
+	private int APP_HEIGHT = 525;
 
-	private JTabbedPane tPane;
 	private ControlTab controlTab;
 
 	/**
-	 * Initializes the Applet with a Pane of two tabs.
+	 * Initializes the App with a Pane of two tabs.
 	 */
-	public void init()
+	public DisplayInterface()
 	{
+		super("PiTech Treadmill Simulator");
 		/* The following is from
 		 * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
 		 */
@@ -36,10 +36,17 @@ public class DisplayInterface extends JApplet
 
 		//create a tabbed pane with two tabs
 		controlTab = new ControlTab();
-		tPane = new JTabbedPane();
+
+		JTabbedPane tPane = new JTabbedPane();
 		tPane.addTab("Treadmill", controlTab);
 
 		getContentPane().add(tPane);
-		setSize(APPLET_WIDTH, APPLET_HEIGHT); //set Applet size
+		setSize(APP_WIDTH, APP_HEIGHT);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setVisible(true);
+	}
+
+	public static void main(String[] args) {
+		new DisplayInterface();
 	}
 }
