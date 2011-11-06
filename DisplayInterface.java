@@ -11,9 +11,9 @@ public class DisplayInterface extends JFrame
 {
 
 	/** Default width. */
-	private int APP_WIDTH = 975;
+	private int APP_WIDTH = 650;
 	/** Default height. */
-	private int APP_HEIGHT = 525;
+	private int APP_HEIGHT = 350;
 
 	private ControlTab controlTab;
 

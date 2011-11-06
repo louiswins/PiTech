@@ -1,6 +1,7 @@
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
 import java.awt.Font;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -135,6 +136,7 @@ public class ControlTab extends JPanel {
 		
 		panelSpeed = new JPanel();
 		panelSpeed.setLayout(new GridLayout(5,1));
+		panelSpeed.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 		panelSpeedArray = new JPanel[5];
 		for(int i =0; i< 5; i++){
 			panelSpeedArray[i] = new JPanel();
@@ -161,6 +163,7 @@ public class ControlTab extends JPanel {
 
 		panelDistance = new JPanel();
 		panelDistance.setLayout(new GridLayout(5,1));
+		panelDistance.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 		panelDistanceArray = new JPanel[5];
 		for(int i =0; i< 5; i++){
 			panelDistanceArray[i] = new JPanel();
