@@ -106,7 +106,7 @@ public class Session {
 		if (timeElapsedCache > 0.0) {
 			return getDistance() * 3600.0 / timeElapsedCache;
 		} else {
-			return (double)getSpeed() / 10.0;
+			return 0.0;
 		}
 	}
 

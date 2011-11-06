@@ -90,11 +90,11 @@ public class ControlTab extends JPanel {
 		/* Set up labels */
 		labelTimeCurVal  = new JLabel("00:00:00", JLabel.CENTER);
 		labelTimeElapsedVal = new JLabel("00:00:00", JLabel.CENTER);
-		labelSpeedCurVal = new JLabel("0", JLabel.CENTER);
-		labelSpeedAvgVal = new JLabel("0", JLabel.CENTER);
-		labelInclineCurVal = new JLabel("0", JLabel.CENTER); 
-		labelDistanceCurVal = new JLabel("0 mi", JLabel.CENTER); 
-		labelDistanceTargVal = new JLabel("0 mi", JLabel.CENTER); 
+		labelSpeedCurVal = new JLabel("0.000 mph", JLabel.CENTER);
+		labelSpeedAvgVal = new JLabel("0.000 mph", JLabel.CENTER);
+		labelInclineCurVal = new JLabel("0 %", JLabel.CENTER); 
+		labelDistanceCurVal = new JLabel("0.000 mi", JLabel.CENTER); 
+		labelDistanceTargVal = new JLabel("0.000 mi", JLabel.CENTER); 
 		labelCaloriesCurVal = new JLabel("0 cal", JLabel.CENTER); 
 		labelCaloriesTargVal = new JLabel("0 cal", JLabel.CENTER);
 
@@ -272,11 +272,11 @@ public class ControlTab extends JPanel {
 	private void updateLabels() {
 		labelTimeElapsedVal.setText(String.format("%02d:%02d:%02d", (int)(myTreadmill.getTimeElapsed() / 3600),
 				(int)(myTreadmill.getTimeElapsed() / 60) % 60, (int)(myTreadmill.getTimeElapsed()) % 60));
-		labelSpeedCurVal.setText(Double.toString((double)myTreadmill.getSpeed() / 10.0) + " mph");
+		labelSpeedCurVal.setText(String.format("%5.3f mph", (double)myTreadmill.getSpeed() / 10.0));
 		labelSpeedAvgVal.setText(String.format("%5.3f mph", myTreadmill.getAverageSpeed()));
 		labelInclineCurVal.setText(Integer.toString(myTreadmill.getIncline()) + " %"); 
-		labelDistanceCurVal.setText(String.format("%5.3f miles", myTreadmill.getDistance()));
-		labelCaloriesCurVal.setText(Integer.toString(myTreadmill.getCalories(age, weight)));
+		labelDistanceCurVal.setText(String.format("%5.3f mi", myTreadmill.getDistance()));
+		labelCaloriesCurVal.setText(Integer.toString(myTreadmill.getCalories(age, weight)) + " cal");
 	}
 	
 	/**
