@@ -1,3 +1,5 @@
+// Cat 11/18: found bug: after you stop, and hit quickstart again, labels don't update until you change the speed
+
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -50,7 +52,7 @@ public class ControlTab extends JPanel {
 	private int age, weight;
 	private int timeMultiplier;
 	private Timer timer;
-	private Goal goal;
+	private Goal goalDist, goalDur, goalCal;
 
 
 	/** Maximum speed in tenths of a mile per hour */
@@ -70,6 +72,7 @@ public class ControlTab extends JPanel {
 		pause_Stop = new JButton("Stop");
 		pause_Stop.addActionListener(bl);
 		goal_Run_Start = new JButton("Goal Run Start");
+		goal_Run_Start.addActionListener(bl);
 
 		SpinnerListener sl = new SpinnerListener();
 		sSpeed = new JSpinner(new SpinnerNumberModel(0.0, 0.0, (double)MAX_SPEED/10.0, 0.1));
@@ -257,7 +260,7 @@ public class ControlTab extends JPanel {
 		weight = 180;
 		timeMultiplier = 4;
 
-		goal = new DistanceGoal(0.5);
+		//goal = new DistanceGoal(0.5);
 
 		timer = new Timer(1000 / FPS, new TimerListener());
 		timer.setInitialDelay(0);
@@ -279,6 +282,20 @@ public class ControlTab extends JPanel {
 		labelInclineCurVal.setText(Integer.toString(myTreadmill.getIncline()) + " %"); 
 		labelDistanceCurVal.setText(String.format("%5.3f mi", myTreadmill.getDistance()));
 		labelCaloriesCurVal.setText(Integer.toString(myTreadmill.getCalories(age, weight)) + " cal");
+
+		/* Updates goal labels. */
+		if (goalDist != null)
+			labelDistanceTargVal.setText(goalDist.getProgress(myTreadmill));
+		else
+			labelDistanceTargVal.setText("0.000 mi");
+		if (goalDur != null)
+			labelTimeCurVal.setText(goalDur.getProgress(myTreadmill));
+		else
+			labelTimeCurVal.setText("00:00:00");
+		if (goalCal != null)
+			labelCaloriesTargVal.setText(goalCal.getProgress(myTreadmill));
+		else
+			labelCaloriesTargVal.setText("0 cal");
 	}
 	
 	/**
@@ -290,7 +307,35 @@ public class ControlTab extends JPanel {
 		message.setText(msg);
 	}
 
-
+	/* Checks goal input string for validity. */
+	/* INCOMPLETE */
+	private boolean inputIsValid(String input) {
+		return true;
+	}
+	
+	private void setGoal() {
+		if (radioButtonsGoalRun[0].isSelected()) {
+			writeMessage("Distance goal set.");
+			goalDist = new DistanceGoal(Double.parseDouble(goalTextField.getText()), myTreadmill);
+		} else if (radioButtonsGoalRun[1].isSelected()) {
+			writeMessage("Duration goal set.");
+			goalDur = new DurationGoal(Double.parseDouble(goalTextField.getText()), myTreadmill);
+		} else {
+			writeMessage("Calories goal set.");
+			goalCal = new CalorieGoal(Integer.parseInt(goalTextField.getText()), age, weight, myTreadmill);
+		}
+		/* if the session is paused or stopped,
+		   and we hit the goalStartButton, it starts it back up */
+		if (myTreadmill.getState() == Session.State.STOPPED) {
+			quickStart_Resume.setText("QuickStart");
+			pause_Stop.setText("Pause");
+			myTreadmill.start();
+		} else if (myTreadmill.getState() == Session.State.PAUSED) {
+			quickStart_Resume.setText("QuickStart");
+			pause_Stop.setText("Pause");
+			myTreadmill.resume();
+		}
+	}
 
 	/** Listener for button events. */
 	private class ButtonListener implements ActionListener {
@@ -312,7 +357,21 @@ public class ControlTab extends JPanel {
 				} else {
 					quickStart_Resume.setText("QuickStart");
 					myTreadmill.stop();
+					goalDist = null;
+					goalDur = null;
+					goalCal = null;
 				}
+			} else if (src == goal_Run_Start) {
+				if (goalTextField.getText().equals("")) {
+					writeMessage("Goal input field is empty.  Please enter a value.");
+				} else {
+					if (inputIsValid(goalTextField.getText())) {
+						setGoal();
+					} else {
+						writeMessage("That is not a valid goal input.");
+					}
+				}
+
 			}
 			updateLabels();
 		}
@@ -344,13 +403,36 @@ public class ControlTab extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			long curTime = System.currentTimeMillis();
 			myTreadmill.update((double)(curTime - lastCall) / 1000.0 * timeMultiplier);
+
+			if (goalDist != null) {
+				if (goalDist.checkIfDone(myTreadmill)) {
+					writeMessage("Distance goal reached!");
+					goalDist = null;
+				} else {
+					//writeMessage(DEFAULT_MESSAGE);
+				}
+			}
+
+			if (goalDur != null) {
+				if (goalDur.checkIfDone(myTreadmill)) {
+					writeMessage("Duration goal reached!");
+					goalDur = null;
+				} else {
+					//writeMessage(DEFAULT_MESSAGE);
+				}
+			}
+
+			if (goalCal != null) {
+				if (goalCal.checkIfDone(myTreadmill)) {
+					writeMessage("Calories goal reached!");
+					goalCal = null;
+				} else {
+					//writeMessage(DEFAULT_MESSAGE);
+				}
+			}
+
 			updateLabels();
 
-			if (goal.checkIfDone(myTreadmill)) {
-				writeMessage("Goal has been met!");
-			} else {
-				writeMessage(DEFAULT_MESSAGE);
-			}
 			lastCall = curTime;
 		}
 	}

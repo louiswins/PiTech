@@ -8,4 +8,8 @@ public class EmptyGoal implements Goal {
 	public boolean checkIfDone(Session session) {
 		return false;
 	}
+
+	public String getProgress(Session session) {
+		return "empty";
+	}
 }

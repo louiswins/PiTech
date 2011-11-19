@@ -6,4 +6,5 @@ public interface Goal {
 	 * @return whether the goal has been met
 	 */
 	public boolean checkIfDone(Session session);
+	public String getProgress(Session session);
 }
