@@ -20,8 +20,8 @@ import java.util.ArrayList;
  */
 public class ControlTab extends JPanel {
 	/* Buttons */
-	private JButton quickStart_Resume, pause_Stop, goal_Run_Start;
-	private JSpinner sSpeed, sIncline;
+	private JButton quickStart_Resume, pause_Stop, goal_Run_Start, weightLoss, cardio, hill, random, radioOn, radioOff;
+	private JSpinner sSpeed, sIncline, sUserSpeed, sAge, sWeight;
 	private JRadioButton[] radioButtonsGoalRun;
 	private ButtonGroup myButtonGroup;
 
@@ -31,20 +31,20 @@ public class ControlTab extends JPanel {
 	private JPanel panelSpeedIncline;
 	private JPanel panelTime, panelSpeed, panelIncline, panelDistance, panelCalories;
 	private JPanel panelDistanceRadio, panelDurationRadio, panelCaloriesRadio;
-	private JPanel panelGoals;
+	private JPanel panelGoals, panelUserInfo, panelPrograms, panelRadio;
 	private JPanel[] panelSpeedArray, panelTimeArray, panelInclinationArray, panelDistanceArray, panelCalorieArray;
 
 	/* Labels */
 	private JLabel labelTimeCurVal, labelTimeElapsedVal, labelSpeedCurVal, labelSpeedAvgVal;
 	private JLabel labelInclineCurVal, labelDistanceCurVal, labelDistanceTargVal, labelCaloriesCurVal, labelCaloriesTargVal;
-	private JLabel message;
+	private JLabel message, labelUserSpeed, labelAge, labelWeight, labelRealTime;
 	private JLabel time, speed, inclination, distance, calories;
 
 	/* Misc */
 	private Border blackline;
 	private Font currentFont;
 	private JTextField textFieldGoalDistance, textFieldGoalDuration, textFieldGoalCalories;
-	private JTextField goalTextField;
+	private JTextField goalTextField, timeMultiplierTextField, textFieldAge, textFieldWeight;
 	private JSeparator mySeparator;
 
 	private int distanceTarget, caloriesTarget;
@@ -53,13 +53,14 @@ public class ControlTab extends JPanel {
 	private int timeMultiplier;
 	private Timer timer;
 	private Goal goalDist, goalDur, goalCal;
-	private Goal[] goal;
+	//private Goal[] goal; //maybe later, if there's time
 
 
 	/** Maximum speed in tenths of a mile per hour */
 	private static final int MAX_SPEED = 150;
 	/** Maximum incline in percent */
 	private static final int MAX_INCLINE = 15;
+	private static final int MAX_USERSPEED = 150;
 	private static final int FPS = 100;
 	private static final String DEFAULT_MESSAGE = "Welcome to the PiTech Treadmill Simulator!";
 
@@ -75,6 +76,7 @@ public class ControlTab extends JPanel {
 		goal_Run_Start = new JButton("Goal Run Start");
 		goal_Run_Start.addActionListener(bl);
 
+		//spinners
 		SpinnerListener sl = new SpinnerListener();
 		sSpeed = new JSpinner(new SpinnerNumberModel(0.0, 0.0, (double)MAX_SPEED/10.0, 0.1));
 		sSpeed.setEditor(new JSpinner.NumberEditor(sSpeed, "#0.0"));
@@ -82,6 +84,53 @@ public class ControlTab extends JPanel {
 		sIncline = new JSpinner(new SpinnerNumberModel(0, 0, MAX_INCLINE, 1));
 		sIncline.setEditor(new JSpinner.NumberEditor(sIncline, "#0"));
 		sIncline.addChangeListener(sl);
+		sUserSpeed = new JSpinner(new SpinnerNumberModel(0.0, 0.0, (double)MAX_USERSPEED/10.0, 0.1));  
+		sUserSpeed.setEditor(new JSpinner.NumberEditor(sUserSpeed, "#0.0"));
+		sUserSpeed.addChangeListener(sl);
+		sAge =  new JSpinner(new SpinnerNumberModel(30, 12, 100, 1));  
+		sAge.addChangeListener(sl);
+		sWeight =  new JSpinner(new SpinnerNumberModel(150, 75, 300, 1));
+		sWeight.addChangeListener(sl);
+
+		//for user info panel
+		panelUserInfo = new JPanel();
+		panelUserInfo.setLayout(new GridLayout(4, 4));
+		timeMultiplierTextField = new JTextField(20);
+		labelUserSpeed = new JLabel("User Speed:");
+		labelAge = new JLabel("Age:");
+		labelWeight = new JLabel("Weight:");
+		labelRealTime = new JLabel("Real Time:");
+		panelUserInfo.add(labelUserSpeed);
+		panelUserInfo.add(sUserSpeed);
+		panelUserInfo.add(labelAge);
+		panelUserInfo.add(sAge);
+		panelUserInfo.add(labelWeight);
+		panelUserInfo.add(sWeight);
+		panelUserInfo.add(labelRealTime);
+		panelUserInfo.add(timeMultiplierTextField);
+		
+		//for programs
+		panelPrograms = new JPanel(new GridLayout(4,1));
+		weightLoss = new JButton("Weight Loss");
+		cardio = new JButton("Cardio");
+		hill = new JButton("Hill");
+		random = new JButton("Random");
+		panelPrograms.add(weightLoss);
+		panelPrograms.add(cardio);
+		panelPrograms.add(hill);
+		panelPrograms.add(random);
+		
+		//for radio
+		panelRadio = new JPanel();
+		panelRadio.setLayout(new GridLayout(5,1));
+		radioOn = new JButton("On");
+		radioOff = new JButton("Off");
+		panelRadio.add(new JLabel("RADIO", JLabel.CENTER));
+		panelRadio.add(new JLabel(""));
+		panelRadio.add(radioOn);
+		panelRadio.add(radioOff);
+		panelRadio.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+
 
 		radioButtonsGoalRun = new JRadioButton[3];
 		radioButtonsGoalRun[0] = new JRadioButton("distance", true);
@@ -208,6 +257,7 @@ public class ControlTab extends JPanel {
 		panelOutputs.add(panelDistance);
 //		panelOutputs.add(new JSeparator(SwingConstants.VERTICAL));
 		panelOutputs.add(panelCalories);
+		panelOutputs.add(panelRadio);
 		
 
 		/* Inputs */
@@ -258,6 +308,9 @@ public class ControlTab extends JPanel {
 		panelInputs.add(panelBasicFunc);
 		panelInputs.add(panelGoals);
 		panelInputs.add(panelSpeedIncline);
+		panelInputs.add(panelPrograms);
+		panelInputs.add(panelGoals);
+		panelInputs.add(panelUserInfo);
 		
 		
 		/* Bring it all together */

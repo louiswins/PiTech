@@ -16,6 +16,8 @@ public class DisplayInterface extends JFrame
 	private int APP_HEIGHT = 350;
 
 	private ControlTab controlTab;
+	private UserGuide userGuide;
+	private History history;
 
 	/**
 	 * Initializes the App with a Pane of two tabs.
@@ -36,9 +38,13 @@ public class DisplayInterface extends JFrame
 
 		//create a tabbed pane with two tabs
 		controlTab = new ControlTab();
+		userGuide = new UserGuide();
+		history = new History();
 
 		JTabbedPane tPane = new JTabbedPane();
 		tPane.addTab("Treadmill", controlTab);
+		tPane.addTab("User Guide", userGuide);
+		tPane.addTab("History", history);
 
 		getContentPane().add(tPane);
 		setSize(APP_WIDTH, APP_HEIGHT);
@@ -50,3 +56,4 @@ public class DisplayInterface extends JFrame
 		new DisplayInterface();
 	}
 }
+
