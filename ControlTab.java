@@ -53,6 +53,7 @@ public class ControlTab extends JPanel {
 	private int timeMultiplier;
 	private Timer timer;
 	private Goal goalDist, goalDur, goalCal;
+	private Goal[] goal;
 
 
 	/** Maximum speed in tenths of a mile per hour */
@@ -218,6 +219,24 @@ public class ControlTab extends JPanel {
 		
 		/* Goals & speed/incline controls: right */
 		goalTextField = new JTextField(20);
+
+		/** 
+		 * Only the numbers 1 to 0 on the keyboard change the text field.
+		 *
+		 * 		http://www.codeguru.com/forum/showthread.php?t=221440
+		 */
+		goalTextField.addKeyListener(new KeyAdapter() {
+			public void keyTyped(KeyEvent e) {
+			  char c = e.getKeyChar();
+			  if (!((c >= '0') && (c <= '9') ||
+				 (c == KeyEvent.VK_BACK_SPACE) ||
+				 (c == KeyEvent.VK_DELETE))) {
+				getToolkit().beep();
+				e.consume();
+			  }
+			}
+		  });
+
 		panelGoals = new JPanel();
 		panelGoals.setLayout(new GridLayout(5,1));
 		panelGoals.add(goal_Run_Start);
@@ -308,11 +327,14 @@ public class ControlTab extends JPanel {
 	}
 
 	/* Checks goal input string for validity. */
-	/* INCOMPLETE */
 	private boolean inputIsValid(String input) {
-		return true;
+		if (Integer.parseInt(input) <= 1000)
+			return true;
+		else
+			return false;
 	}
 	
+	/* Determines which goal to set, sets it, and starts/resumes the treadmill. */
 	private void setGoal() {
 		if (radioButtonsGoalRun[0].isSelected()) {
 			writeMessage("Distance goal set.");
@@ -399,7 +421,7 @@ public class ControlTab extends JPanel {
 			super();
 			lastCall = System.currentTimeMillis();
 		}
-		
+
 		public void actionPerformed(ActionEvent e) {
 			long curTime = System.currentTimeMillis();
 			myTreadmill.update((double)(curTime - lastCall) / 1000.0 * timeMultiplier);
