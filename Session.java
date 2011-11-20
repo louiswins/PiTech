@@ -12,6 +12,8 @@ public class Session {
 	private List<HistoryData> history;
 	private HistoryData currentValues;
 	private State state;
+	private History historyStore;
+	private int age, weight;
 
 	/* Cache variables: these should be the sums of all the values in
 	 * this.history; to get usable data while running, add in the values in
@@ -32,9 +34,12 @@ public class Session {
 	 * Sets up the treadmill and puts it in a stopped state. To actually
 	 * start the treadmill, you must call {@link #start(int, int)}.
 	 */
-	public Session() {
+	public Session(History hist, int age, int weight) {
 		// Pre-allocate memory for 50. Nice!
 		history = new ArrayList<HistoryData>(50);
+		historyStore = hist;
+		this.age = age;
+		this.weight = weight;
 		timeElapsedCache = 0;
 		totalDistanceCache = 0.0;
 		currentValues = new HistoryData(0, 0);
@@ -219,6 +224,14 @@ public class Session {
 	private void saveHistoryData() {
 		updateCaches(currentValues.getDistance());
 		history.add(currentValues);
+		/** Format history record. */
+		String line = "Distance: " + String.format("%5.3f mi", currentValues.getDistance())
+									+ "     Time: " + String.format("%02d:%02d:%02d", (int)(currentValues.getTime() / 3600), (int)(currentValues.getTime() / 60) % 60, (int)(currentValues.getTime()) % 60)
+									+ "     Speed: " + String.format("%5.3f mph", (double)currentValues.getSpeed() / 10.0)
+									+ "     Incline: " + currentValues.getIncline()
+									+ "     Calories: " + (int)currentValues.getCalories(age, weight);
+		/** Write to history tab. */
+		historyStore.updateHistory(line);
 	}
 	/**
 	 * Updates the distance cache. Should be called every time a {@link

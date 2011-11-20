@@ -37,9 +37,9 @@ public class DisplayInterface extends JFrame
 		catch (IllegalAccessException e) {}
 
 		//create a tabbed pane with two tabs
-		controlTab = new ControlTab();
-		userGuide = new UserGuide();
 		history = new History();
+		controlTab = new ControlTab(history);
+		userGuide = new UserGuide();
 
 		JTabbedPane tPane = new JTabbedPane();
 		tPane.addTab("Treadmill", controlTab);

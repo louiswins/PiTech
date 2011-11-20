@@ -51,6 +51,7 @@ public class ControlTab extends JPanel {
 	private Session myTreadmill;
 	private int age, weight;
 	private int timeMultiplier;
+	private int timeSinceLastChange;
 	private Timer timer;
 	private Goal goalDist, goalDur, goalCal;
 	//private Goal[] goal; //maybe later, if there's time
@@ -65,7 +66,7 @@ public class ControlTab extends JPanel {
 	private static final String DEFAULT_MESSAGE = "Welcome to the PiTech Treadmill Simulator!";
 
 	
-	public ControlTab() {
+	public ControlTab(History hist) {
 		ButtonListener bl = new ButtonListener();
 
 		/* Set up buttons */
@@ -281,7 +282,7 @@ public class ControlTab extends JPanel {
 			  if (!((c >= '0') && (c <= '9') ||
 				 (c == KeyEvent.VK_BACK_SPACE) ||
 				 (c == KeyEvent.VK_DELETE))) {
-				getToolkit().beep();
+				//getToolkit().beep();
 				e.consume();
 			  }
 			}
@@ -327,9 +328,9 @@ public class ControlTab extends JPanel {
 		/* Set up the current variables. */
 		distanceTarget = 0;
 		caloriesTarget = 0;
-		myTreadmill = new Session();
 		age = 21;
 		weight = 180;
+		myTreadmill = new Session(hist, age, weight);
 		timeMultiplier = 4;
 
 		//goal = new DistanceGoal(0.5);
@@ -369,7 +370,7 @@ public class ControlTab extends JPanel {
 		else
 			labelCaloriesTargVal.setText("0 cal");
 	}
-	
+
 	/**
 	 * Writes a message to the messagebox.
 	 *
@@ -386,7 +387,7 @@ public class ControlTab extends JPanel {
 		else
 			return false;
 	}
-	
+
 	/* Determines which goal to set, sets it, and starts/resumes the treadmill. */
 	private void setGoal() {
 		if (radioButtonsGoalRun[0].isSelected()) {
@@ -507,7 +508,6 @@ public class ControlTab extends JPanel {
 			}
 
 			updateLabels();
-
 			lastCall = curTime;
 		}
 	}
