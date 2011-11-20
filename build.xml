@@ -7,7 +7,9 @@
 
 	<target name="compile" description="Compile the source">
 		<mkdir dir="${builddir}"/>
-		<javac srcdir="." destdir="${builddir}" includeantruntime="false"/>
+		<javac srcdir="." destdir="${builddir}" includeantruntime="false">
+			<compilerarg value="-Xlint:-serial"/>
+		</javac>
 	</target>
 
 	<target name="jar" depends="compile" description="Create jar">
