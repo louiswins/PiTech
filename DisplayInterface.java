@@ -11,9 +11,9 @@ public class DisplayInterface extends JFrame
 {
 
 	/** Default width. */
-	private int APP_WIDTH = 650;
+	private int APP_WIDTH = 800;
 	/** Default height. */
-	private int APP_HEIGHT = 350;
+	private int APP_HEIGHT = 400;
 
 	private ControlTab controlTab;
 	private UserGuide userGuide;
@@ -48,6 +48,7 @@ public class DisplayInterface extends JFrame
 
 		getContentPane().add(tPane);
 		setSize(APP_WIDTH, APP_HEIGHT);
+		//pack();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 	}
