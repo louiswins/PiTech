@@ -1,0 +1,32 @@
+<project name="PiTech" default="jar" basedir=".">
+	<description>
+		Treadmill Simulator software
+	</description>
+	<property name="builddir" location="bin"/>
+	<property name="docdir" location="javadoc"/>
+
+	<target name="compile" description="Compile the source">
+		<mkdir dir="${builddir}"/>
+		<javac srcdir="." destdir="${builddir}" includeantruntime="false">
+			<compilerarg value="-Xlint:-serial"/>
+		</javac>
+	</target>
+
+	<target name="jar" depends="compile" description="Create jar">
+		<jar jarfile="PiTech.jar" basedir="${builddir}">
+			<manifest>
+				<attribute name="Main-Class" value="DisplayInterface"/>
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="doc" description="Create javadoc">
+		<javadoc destdir="${docdir}" Private="true">
+			<fileset dir="." includes="*.java"/>
+		</javadoc>
+	</target>
+
+	<target name="clean" description="Clean up">
+		<delete dir="${builddir}"/>
+	</target>
+</project>

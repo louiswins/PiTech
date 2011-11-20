@@ -14,7 +14,7 @@ public class DurationGoal implements Goal {
 
 	public String getProgress(Session session) {
 		int timeElapsed = (int)((goal - (session.getTimeElapsed() - startTime)));
-		return String.format("%02d:%02d:%02d", (int)(timeElapsed / 3600),
-				(int)(timeElapsed / 60) % 60, (int)(timeElapsed) % 60);
+		return String.format("%02d:%02d:%02d", timeElapsed / 3600,
+				(timeElapsed / 60) % 60, timeElapsed % 60);
 	}
 }
