@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * Controls the Session. Shows all the important information and data about the
  * current run session.
  *
- * @version 2.0
+ * @version 2.2
  */
 public class ControlTab extends JPanel {
 	/* Control Elements */
@@ -154,9 +154,10 @@ public class ControlTab extends JPanel {
 
 		/* Basic functions */
 		quickStart_Resume = new JButton("QuickStart");
-		// This useless-looking next line keeps the buttons from changing sizes when the labels change; see
+		// The following useless-looking lines keep the buttons from changing sizes when the labels change; see
 		// http://docs.oracle.com/javase/1.4.2/docs/api/javax/swing/JComponent.html#setPreferredSize%28java.awt.Dimension%29
 		quickStart_Resume.setPreferredSize(quickStart_Resume.getPreferredSize());
+		quickStart_Resume.setMinimumSize(quickStart_Resume.getMinimumSize());
 		quickStart_Resume.addActionListener(bl);
 		pause_Stop = new JButton("Stop");
 		pause_Stop.addActionListener(bl);
@@ -362,6 +363,11 @@ public class ControlTab extends JPanel {
 				quickStart_Resume.setText("QuickStart");
 				pause_Stop.setText("Pause");
 				if (myTreadmill.getState() == Session.State.STOPPED) {
+					Double val = (Double)(sSpeed.getValue());
+					// always best not to compare floats directly
+					if (val.doubleValue() < 0.05) {
+						sSpeed.setValue(new Double(1.0));
+					}
 					myTreadmill.start();
 				} else {
 					myTreadmill.resume();
@@ -374,6 +380,9 @@ public class ControlTab extends JPanel {
 				} else {
 					quickStart_Resume.setText("QuickStart");
 					myTreadmill.stop();
+					/* Reset speed and incline */
+					sSpeed.setValue(new Double(0.0));
+					sIncline.setValue(new Integer(0));
 					goalDist = null;
 					goalDur = null;
 					goalCal = null;

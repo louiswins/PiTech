@@ -75,4 +75,20 @@ public class HistoryData {
 	public double getCalories(int age, int weight) {
 		return (0.75 * weight * getDistance());
 	}
+
+	/**
+	 * Returns a representation of the history for this time period.
+	 *
+	 * @param age    age of user in years
+	 * @param weight weight in lbs
+	 * @return       formatted value
+	 */
+	public String getString(int age, int weight) {
+		return "Distance: " + String.format("%5.3f mi", getDistance()) +
+		       "\tTime: " + String.format("%02d:%02d:%02d", (int)(getTime() / 3600),
+				                  (int)(getTime() / 60) % 60, (int)(getTime()) % 60) +
+		       "\tSpeed: " + String.format("%5.3f mph", (double)getSpeed() / 10.0) +
+		       "\tIncline: " + getIncline() +
+		       "\tCalories: " + (int)getCalories(age, weight);
+	}
 }

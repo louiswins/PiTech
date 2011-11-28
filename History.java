@@ -3,6 +3,11 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.event.*;
 
+/**
+ * Shows the history of the current running session.
+ *
+ * @version 0.7
+ */
 public class History extends JPanel{
 
 	JTextArea area;
@@ -10,21 +15,32 @@ public class History extends JPanel{
 	Dimension size;
 	History(){
 		//size = new Dimension(600,270);
-		area = new JTextArea("User History for Current Session\n\n");
+		area = new JTextArea();
 		area.setEditable(false);
 		//area.setPreferredSize(size);
 		add(area);
 
-    	scroller = new JScrollPane(area);
-    	scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-    	scroller.setPreferredSize(new Dimension(610,270));
-    	add(scroller);
+		scroller = new JScrollPane(area);
+		scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scroller.setPreferredSize(new Dimension(610,270));
+		add(scroller);
+
+		resetHistory();
 	}
-	
-	public String updateHistory(String line){	//IDEA: input might be of type other than Object
-		String history = "test"; 
-//		history = obj.toString();				//IDEA: you can write a toString in another class for this object
+
+	/**
+	 * Adds to the remembered history data.
+	 *
+	 * @param line the data to add
+	 */
+	public void updateHistory(String line) {
 		area.append(line + "\n");					//you can use area.setText("text") if you prefer
-		return history;
+	}
+
+	/**
+	 * Resets the remembered history data.
+	 */
+	public void resetHistory() {
+		area.setText("User History for Current Session\n\n");
 	}
 }

@@ -189,7 +189,7 @@ public class Session {
 	public void start(int speed, int incline) {
 		if (state != State.STOPPED) return;
 		currentValues = new HistoryData(speed, incline);
-		state = State.RUNNING;
+		start();
 	}
 	/**
 	 * Starts the treadmill. If the treadmill is currently running or
@@ -197,7 +197,11 @@ public class Session {
 	 */
 	public void start() {
 		if (state != State.STOPPED) return;
+		if (currentValues.getSpeed() == 0.0) {
+			currentValues = new HistoryData(10, currentValues.getIncline());
+		}
 		state = State.RUNNING;
+		historyStore.resetHistory();
 	}
 	/**
 	 * Pauses the treadmill. All data are retained. If the treadmill is
@@ -224,14 +228,11 @@ public class Session {
 	private void saveHistoryData() {
 		updateCaches(currentValues.getDistance());
 		history.add(currentValues);
-		/** Format history record. */
-		String line = "Distance: " + String.format("%5.3f mi", currentValues.getDistance())
-									+ "     Time: " + String.format("%02d:%02d:%02d", (int)(currentValues.getTime() / 3600), (int)(currentValues.getTime() / 60) % 60, (int)(currentValues.getTime()) % 60)
-									+ "     Speed: " + String.format("%5.3f mph", (double)currentValues.getSpeed() / 10.0)
-									+ "     Incline: " + currentValues.getIncline()
-									+ "     Calories: " + (int)currentValues.getCalories(age, weight);
-		/** Write to history tab. */
-		historyStore.updateHistory(line);
+		/* Let's only do this if the time is > .5s because otherwise the
+		 * user was probably just scrolling. */
+		if (currentValues.getTime() < 0.5) return;
+		/* Write to history tab. */
+		historyStore.updateHistory(currentValues.getString(age, weight));
 	}
 	/**
 	 * Updates the distance cache. Should be called every time a {@link
