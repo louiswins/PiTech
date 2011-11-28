@@ -75,61 +75,77 @@ public class ControlTab extends JPanel {
 
 
 		/* Outputs */
-		JPanel panelOutputs = new JPanel(new GridBagLayout()); 
+		JPanel panelOutputs = new JPanel(new GridLayout(0, 6)); 
+		panelOutputs.setBorder(BorderFactory.createMatteBorder(0,0,1,1,Color.BLACK));
 
 		/* Time */
 		labelTimeElapsedVal  = new JLabel("00:00:00", JLabel.CENTER);
 		labelTimeTargVal = new JLabel("00:00:00", JLabel.CENTER);
-		panelOutputs.add(new JLabel("TIME"), new GBC(0, 0).inset(6,0,6).weight(1, 1).anchor(GBC.SOUTH));
-		panelOutputs.add(new JLabel("Elapsed"), new GBC(0, 1));
-		panelOutputs.add(labelTimeElapsedVal, new GBC(0, 2).inset(0,0,10));
-		panelOutputs.add(new JLabel("Target"), new GBC(00, 3));
-		panelOutputs.add(labelTimeTargVal, new GBC(0, 4).inset(0,0,10).weight(1, 1).anchor(GBC.NORTH));
-		panelOutputs.add(new JSeparator(JSeparator.VERTICAL), new GBC(1, 0).height(5).fill(GBC.VERTICAL));
+		JPanel timePanel = new JPanel(new GridBagLayout());
+		timePanel.add(new JLabel("TIME"), new GBC(0, 0).inset(6,0,6).weight(1, 1).anchor(GBC.SOUTH));
+		timePanel.add(new JLabel("Elapsed"), new GBC(0, 1));
+		timePanel.add(labelTimeElapsedVal, new GBC(0, 2).inset(0,0,10));
+		timePanel.add(new JLabel("Target"), new GBC(00, 3));
+		timePanel.add(labelTimeTargVal, new GBC(0, 4).inset(0,0,10).weight(1, 1).anchor(GBC.NORTH));
+		timePanel.setBorder(BorderFactory.createMatteBorder(0,1,0,1,Color.BLACK));
+		panelOutputs.add(timePanel);
 		
 		/* Speed */
 		labelSpeedCurVal = new JLabel("0.000 mph", JLabel.CENTER);
 		labelSpeedAvgVal = new JLabel("0.000 mph", JLabel.CENTER);
-		panelOutputs.add(new JLabel("SPEED"), new GBC(10, 0).inset(6,0,6).weight(1, 0).anchor(GBC.SOUTH));
-		panelOutputs.add(new JLabel("Current"), new GBC(10, 1));
-		panelOutputs.add(labelSpeedCurVal, new GBC(10, 2).inset(0,0,10));
-		panelOutputs.add(new JLabel("Average"), new GBC(10, 3));
-		panelOutputs.add(labelSpeedAvgVal, new GBC(10, 4).inset(0,0,10).anchor(GBC.NORTH));
-		panelOutputs.add(new JSeparator(JSeparator.VERTICAL), new GBC(11, 0).height(5).fill(GBC.VERTICAL));
+		JPanel speedPanel = new JPanel(new GridBagLayout());
+		speedPanel.add(new JLabel("SPEED"), new GBC(0, 0).inset(6,0,6).weight(1, 0).anchor(GBC.SOUTH));
+		speedPanel.add(new JLabel("Current"), new GBC(0, 1));
+		speedPanel.add(labelSpeedCurVal, new GBC(0, 2).inset(0,0,10));
+		speedPanel.add(new JLabel("Average"), new GBC(0, 3));
+		speedPanel.add(labelSpeedAvgVal, new GBC(0, 4).inset(0,0,10).anchor(GBC.NORTH));
+		speedPanel.setBorder(BorderFactory.createMatteBorder(0,0,0,1,Color.BLACK));
+		panelOutputs.add(speedPanel);
 		
 		/* Incline */
 		labelInclineCurVal = new JLabel("0 %", JLabel.CENTER); 
-		panelOutputs.add(new JLabel("INCLINE"), new GBC(20, 0).inset(6,0,6).weight(1, 0).anchor(GBC.SOUTH));
-		panelOutputs.add(new JLabel("Current"), new GBC(20, 1));
-		panelOutputs.add(labelInclineCurVal, new GBC(20, 2));
-		panelOutputs.add(new JSeparator(JSeparator.VERTICAL), new GBC(21, 0).height(5).fill(GBC.VERTICAL));
+		JPanel incPanel = new JPanel(new GridBagLayout());
+		incPanel.add(new JLabel("INCLINE"), new GBC(0, 0).inset(6,0,6).weight(1, 0).anchor(GBC.SOUTH));
+		incPanel.add(new JLabel("Current"), new GBC(0, 1));
+		incPanel.add(labelInclineCurVal, new GBC(0, 2).inset(0,0,10));
+		/* Dirty hack to align labels */
+		incPanel.add(new JLabel(" "), new GBC(0, 3));
+		incPanel.add(new JLabel(" "), new GBC(0, 4).inset(0,0,10).anchor(GBC.NORTH));
+		incPanel.setBorder(BorderFactory.createMatteBorder(0,0,0,1,Color.BLACK));
+		panelOutputs.add(incPanel);
 
 		/* Distance */
 		labelDistanceCurVal = new JLabel("0.000 mi", JLabel.CENTER); 
 		labelDistanceTargVal = new JLabel("0.000 mi", JLabel.CENTER); 
-		panelOutputs.add(new JLabel("DISTANCE"), new GBC(30, 0).inset(6,0,6).weight(1, 0).anchor(GBC.SOUTH));
-		panelOutputs.add(new JLabel("Current"), new GBC(30, 1));
-		panelOutputs.add(labelDistanceCurVal, new GBC(30, 2).inset(0,0,10));
-		panelOutputs.add(new JLabel("Target"), new GBC(30, 3));
-		panelOutputs.add(labelDistanceTargVal, new GBC(30, 4).inset(0,0,10).anchor(GBC.NORTH));
-		panelOutputs.add(new JSeparator(JSeparator.VERTICAL), new GBC(31, 0).height(5).fill(GBC.VERTICAL));
+		JPanel distPanel = new JPanel(new GridBagLayout());
+		distPanel.add(new JLabel("DISTANCE"), new GBC(0, 0).inset(6,0,6).weight(1, 0).anchor(GBC.SOUTH));
+		distPanel.add(new JLabel("Current"), new GBC(0, 1));
+		distPanel.add(labelDistanceCurVal, new GBC(0, 2).inset(0,0,10));
+		distPanel.add(new JLabel("Target"), new GBC(0, 3));
+		distPanel.add(labelDistanceTargVal, new GBC(0, 4).inset(0,0,10).anchor(GBC.NORTH));
+		distPanel.setBorder(BorderFactory.createMatteBorder(0,0,0,1,Color.BLACK));
+		panelOutputs.add(distPanel);
 		
 		/* Calories */
 		labelCaloriesCurVal = new JLabel("0 cal", JLabel.CENTER); 
 		labelCaloriesTargVal = new JLabel("0 cal", JLabel.CENTER);
-		panelOutputs.add(new JLabel("CALORIES"), new GBC(40, 0).inset(6,0,6).weight(1, 0).anchor(GBC.SOUTH));
-		panelOutputs.add(new JLabel("Current"), new GBC(40, 1));
-		panelOutputs.add(labelCaloriesCurVal, new GBC(40, 2).inset(0,0,10));
-		panelOutputs.add(new JLabel("Target"), new GBC(40, 3));
-		panelOutputs.add(labelCaloriesTargVal, new GBC(40, 4).inset(0,0,10).anchor(GBC.NORTH));
-		panelOutputs.add(new JSeparator(JSeparator.VERTICAL), new GBC(41, 0).height(5).fill(GBC.VERTICAL));
+		JPanel calPanel = new JPanel(new GridBagLayout());
+		calPanel.add(new JLabel("CALORIES"), new GBC(0, 0).inset(6,0,6).weight(1, 0).anchor(GBC.SOUTH));
+		calPanel.add(new JLabel("Current"), new GBC(0, 1));
+		calPanel.add(labelCaloriesCurVal, new GBC(0, 2).inset(0,0,10));
+		calPanel.add(new JLabel("Target"), new GBC(0, 3));
+		calPanel.add(labelCaloriesTargVal, new GBC(0, 4).inset(0,0,10).anchor(GBC.NORTH));
+		calPanel.setBorder(BorderFactory.createMatteBorder(0,0,0,1,Color.BLACK));
+		panelOutputs.add(calPanel);
 
 		/* Radio Controls */
 		radioOn = new JButton("On");
 		radioOff = new JButton("Off");
-		panelOutputs.add(new JLabel("RADIO"), new GBC(50, 0).inset(6,0,6).weight(1, 0).anchor(GBC.SOUTH));
-		panelOutputs.add(radioOn, new GBC(50, 1).height(2).anchor(GBC.SOUTH).fill(GBC.HORIZONTAL));
-		panelOutputs.add(radioOff, new GBC(50, 3).height(2).anchor(GBC.NORTH).fill(GBC.HORIZONTAL));
+		JPanel radioPanel = new JPanel(new GridBagLayout());
+		radioPanel.add(new JLabel("RADIO"), new GBC(0, 0).inset(6,0,15).weight(1, 0).anchor(GBC.SOUTH));
+		radioPanel.add(radioOn, new GBC(0, 1).height(2).anchor(GBC.SOUTH).fill(GBC.HORIZONTAL));
+		radioPanel.add(radioOff, new GBC(0, 3).height(2).anchor(GBC.NORTH).fill(GBC.HORIZONTAL));
+		panelOutputs.add(radioPanel);
 
 
 
@@ -138,11 +154,12 @@ public class ControlTab extends JPanel {
 
 		/* Basic functions */
 		quickStart_Resume = new JButton("QuickStart");
+		// This useless-looking next line keeps the buttons from changing sizes when the labels change; see
+		// http://docs.oracle.com/javase/1.4.2/docs/api/javax/swing/JComponent.html#setPreferredSize%28java.awt.Dimension%29
+		quickStart_Resume.setPreferredSize(quickStart_Resume.getPreferredSize());
 		quickStart_Resume.addActionListener(bl);
 		pause_Stop = new JButton("Stop");
 		pause_Stop.addActionListener(bl);
-		goal_Run_Start = new JButton("Goal Run Start");
-		goal_Run_Start.addActionListener(bl);
 
 		JPanel panelBasicFunc = new JPanel(new GridBagLayout());
 		panelBasicFunc.add(quickStart_Resume, new GBC(0, 0).weight(1,1).fill(GBC.BOTH).inset(0, 0, 5));
@@ -175,7 +192,8 @@ public class ControlTab extends JPanel {
 		panelPrograms.add(random, new GBC(20, 3).fill(GBC.BOTH).weight(1,1));
 
 		/* Goals */
-		goalTextField = new JTextField();
+		goal_Run_Start = new JButton("Goal Run Start");
+		goal_Run_Start.addActionListener(bl);
 		radioButtonsGoalRun = new JRadioButton[3];
 		radioButtonsGoalRun[0] = new JRadioButton("distance", true);
 		radioButtonsGoalRun[1] = new JRadioButton("duration");
@@ -184,6 +202,7 @@ public class ControlTab extends JPanel {
 		myButtonGroup.add(radioButtonsGoalRun[0]);
 		myButtonGroup.add(radioButtonsGoalRun[1]);
 		myButtonGroup.add(radioButtonsGoalRun[2]);
+		goalTextField = new JTextField();
 
 		JPanel panelGoals = new JPanel(new GridBagLayout());
 		panelGoals.add(goal_Run_Start, new GBC(30, 0).weight(1, 1).fill(GBC.HORIZONTAL).anchor(GBC.SOUTH));
@@ -243,7 +262,6 @@ public class ControlTab extends JPanel {
 		setLayout(new GridBagLayout());
 		add(panelMessage, new GBC(0, 0).fill(GBC.HORIZONTAL));
 		add(panelOutputs, new GBC(0, 10).weight(1, 1).fill(GBC.BOTH));
-		add(new JSeparator(JSeparator.HORIZONTAL), new GBC(0, 11).fill(GBC.HORIZONTAL));
 		add(panelInputs, new GBC(0, 20).weight(1, 1).fill(GBC.BOTH));
 		
 
