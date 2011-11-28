@@ -239,6 +239,7 @@ public class ControlTab extends JPanel {
 		sWeight =  new JSpinner(new SpinnerNumberModel(150, 75, 300, 1));
 		sWeight.addChangeListener(sl);
 		timeMultiplierTextField = new JTextField("4");
+		timeMultiplierTextField.addActionListener(bl);
 
 		JPanel panelUserInfo = new JPanel(new GridBagLayout());
 		panelUserInfo.add(new JLabel("User Speed: "), new GBC(40, 0).inset(0, 0, 5).anchor(GBC.EAST));
@@ -398,6 +399,17 @@ public class ControlTab extends JPanel {
 					}
 				}
 
+			} else if (src == timeMultiplierTextField) {
+				int newmult = -1;
+				try {
+					newmult = Integer.parseInt(timeMultiplierTextField.getText());
+				} catch (NumberFormatException e) {}
+				if (newmult > 0) {
+					timeMultiplier = newmult;
+				} else {
+					writeMessage("Time multiplier must be a positive integer.");
+					timeMultiplierTextField.setText(Integer.toString(timeMultiplier));
+				}
 			}
 			updateLabels();
 		}
