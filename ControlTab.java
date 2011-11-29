@@ -21,6 +21,7 @@ public class ControlTab extends JPanel {
 	/*private JButton radioOn, radioOff;*/
 	private JSpinner sSpeed, sIncline;
 	private JSpinner sUserSpeed, sAge, sWeight;
+	private JCheckBox lockUserSpeed;
 	private JRadioButton[] radioButtonsGoalRun;
 
 	/* Display Elements */
@@ -190,9 +191,9 @@ public class ControlTab extends JPanel {
 		random = new JButton("Random");
 
 		JPanel panelPrograms = new JPanel(new GridBagLayout());
-		panelPrograms.add(weightLoss, new GBC(20, 0).fill(GBC.BOTH).weight(1,1).inset(0, 0, 5));
-		panelPrograms.add(cardio, new GBC(20, 1).fill(GBC.BOTH).weight(1,1).inset(0, 0, 5));
-		panelPrograms.add(hill, new GBC(20, 2).fill(GBC.BOTH).weight(1,1).inset(0, 0, 5));
+		panelPrograms.add(weightLoss, new GBC(20, 0).fill(GBC.BOTH).weight(1,1).inset(0, 0, 3));
+		panelPrograms.add(cardio, new GBC(20, 1).fill(GBC.BOTH).weight(1,1).inset(0, 0, 3));
+		panelPrograms.add(hill, new GBC(20, 2).fill(GBC.BOTH).weight(1,1).inset(0, 0, 3));
 		panelPrograms.add(random, new GBC(20, 3).fill(GBC.BOTH).weight(1,1));
 
 		/* Goals */
@@ -237,22 +238,27 @@ public class ControlTab extends JPanel {
 		sUserSpeed = new JSpinner(new SpinnerNumberModel(0.0, 0.0, (double)MAX_USERSPEED/10.0, 0.1));  
 		sUserSpeed.setEditor(new JSpinner.NumberEditor(sUserSpeed, "#0.0"));
 		sUserSpeed.addChangeListener(sl);
+		sUserSpeed.setEnabled(false);
 		sAge =  new JSpinner(new SpinnerNumberModel(30, 12, 100, 1));  
 		sAge.addChangeListener(sl);
 		sWeight =  new JSpinner(new SpinnerNumberModel(150, 75, 300, 1));
 		sWeight.addChangeListener(sl);
 		timeMultiplierTextField = new JTextField("4");
 		timeMultiplierTextField.addActionListener(bl);
+		lockUserSpeed = new JCheckBox("Lock", true);
+		lockUserSpeed.addActionListener(bl);
 
 		JPanel panelUserInfo = new JPanel(new GridBagLayout());
-		panelUserInfo.add(new JLabel("User Speed: "), new GBC(40, 0).inset(0, 0, 5).anchor(GBC.EAST));
-		panelUserInfo.add(new JLabel("Age: "), new GBC(40, 1).inset(0, 0, 5).anchor(GBC.EAST));
-		panelUserInfo.add(new JLabel("Weight: "), new GBC(40, 2).inset(0, 0, 5).anchor(GBC.EAST));
-		panelUserInfo.add(new JLabel("Time Mult: "), new GBC(40, 3).anchor(GBC.EAST));
-		panelUserInfo.add(sUserSpeed, new GBC(42, 0).weight(1, 0).inset(0, 0, 5).fill(GBC.HORIZONTAL));
-		panelUserInfo.add(sAge, new GBC(42, 1).inset(0, 0, 5).fill(GBC.HORIZONTAL));
-		panelUserInfo.add(sWeight, new GBC(42, 2).inset(0, 0, 5).fill(GBC.HORIZONTAL));
-		panelUserInfo.add(timeMultiplierTextField, new GBC(42, 3).fill(GBC.HORIZONTAL));
+		panelUserInfo.add(new JLabel("USER CONTROLS"), new GBC(0, 0).inset(0,0,5).width(4));
+		panelUserInfo.add(new JLabel("Speed: "), new GBC(0, 1).inset(0, 0, 5).anchor(GBC.EAST));
+		panelUserInfo.add(sUserSpeed, new GBC(1, 1).weight(1, 0).inset(0, 0, 5).fill(GBC.HORIZONTAL).width(2));
+		panelUserInfo.add(lockUserSpeed, new GBC(3, 1).inset(0,0,5).anchor(GBC.EAST));
+		panelUserInfo.add(new JLabel("Age: "), new GBC(0, 2).inset(0, 0, 5).anchor(GBC.EAST));
+		panelUserInfo.add(sAge, new GBC(1, 2).inset(0, 0, 5).fill(GBC.HORIZONTAL).weight(1,0));
+		panelUserInfo.add(new JLabel("Weight: "), new GBC(2, 2).inset(0, 0, 5).anchor(GBC.EAST));
+		panelUserInfo.add(sWeight, new GBC(3, 2).inset(0, 0, 5).fill(GBC.HORIZONTAL).weight(1,0));
+		panelUserInfo.add(new JLabel("Time Mult: "), new GBC(2, 3).anchor(GBC.EAST));
+		panelUserInfo.add(timeMultiplierTextField, new GBC(3, 3).fill(GBC.HORIZONTAL));
 		
 
 		/* All inputs */
@@ -401,7 +407,6 @@ public class ControlTab extends JPanel {
 						writeMessage("That is not a valid goal input.");
 					}
 				}
-
 			} else if (src == timeMultiplierTextField) {
 				int newmult = -1;
 				try {
@@ -412,6 +417,13 @@ public class ControlTab extends JPanel {
 				} else {
 					writeMessage("Time multiplier must be a positive integer.");
 					timeMultiplierTextField.setText(Integer.toString(timeMultiplier));
+				}
+			} else if (src == lockUserSpeed) {
+				if (lockUserSpeed.isSelected()) {
+					sUserSpeed.setEnabled(false);
+					sUserSpeed.setValue(sSpeed.getValue());
+				} else {
+					sUserSpeed.setEnabled(true);
 				}
 			}
 			updateLabels();
@@ -425,6 +437,9 @@ public class ControlTab extends JPanel {
 			Number val = (Number)sp.getValue();
 			if (sp == sSpeed) {
 				myTreadmill.setSpeed(Math.round(10*val.floatValue()));
+				if (lockUserSpeed.isSelected()) {
+					sUserSpeed.setValue(val);
+				}
 			} else if (sp == sIncline) {
 				myTreadmill.setIncline(val.intValue());
 			}
