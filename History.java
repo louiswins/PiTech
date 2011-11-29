@@ -41,6 +41,7 @@ public class History extends JPanel{
 	 * Resets the remembered history data.
 	 */
 	public void resetHistory() {
-		area.setText("User History for Current Session\n\n");
+		area.setText("User History for Current Session\n\n" +
+			     "Distance\tTime\tSpeed\tIncline\tCalories\n");
 	}
 }

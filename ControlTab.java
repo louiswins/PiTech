@@ -18,7 +18,7 @@ public class ControlTab extends JPanel {
 	private JButton quickStart_Resume, pause_Stop;
 	private JButton goal_Run_Start;
 	private JButton weightLoss, cardio, hill, random;
-	private JButton radioOn, radioOff;
+	/*private JButton radioOn, radioOff;*/
 	private JSpinner sSpeed, sIncline;
 	private JSpinner sUserSpeed, sAge, sWeight;
 	private JRadioButton[] radioButtonsGoalRun;
@@ -75,7 +75,8 @@ public class ControlTab extends JPanel {
 
 
 		/* Outputs */
-		JPanel panelOutputs = new JPanel(new GridLayout(0, 6)); 
+		// JPanel panelOutputs = new JPanel(new GridLayout(1, 6)); 
+		JPanel panelOutputs = new JPanel(new GridLayout(1, 5));
 		panelOutputs.setBorder(BorderFactory.createMatteBorder(0,0,1,1,Color.BLACK));
 
 		/* Time */
@@ -127,8 +128,8 @@ public class ControlTab extends JPanel {
 		panelOutputs.add(distPanel);
 		
 		/* Calories */
-		labelCaloriesCurVal = new JLabel("0 cal", JLabel.CENTER); 
-		labelCaloriesTargVal = new JLabel("0 cal", JLabel.CENTER);
+		labelCaloriesCurVal = new JLabel("0 Cal", JLabel.CENTER); 
+		labelCaloriesTargVal = new JLabel("0 Cal", JLabel.CENTER);
 		JPanel calPanel = new JPanel(new GridBagLayout());
 		calPanel.add(new JLabel("CALORIES"), new GBC(0, 0).inset(6,0,6).weight(1, 0).anchor(GBC.SOUTH));
 		calPanel.add(new JLabel("Current"), new GBC(0, 1));
@@ -139,6 +140,7 @@ public class ControlTab extends JPanel {
 		panelOutputs.add(calPanel);
 
 		/* Radio Controls */
+		/*
 		radioOn = new JButton("On");
 		radioOff = new JButton("Off");
 		JPanel radioPanel = new JPanel(new GridBagLayout());
@@ -146,6 +148,7 @@ public class ControlTab extends JPanel {
 		radioPanel.add(radioOn, new GBC(0, 1).height(2).anchor(GBC.SOUTH).fill(GBC.HORIZONTAL));
 		radioPanel.add(radioOff, new GBC(0, 3).height(2).anchor(GBC.NORTH).fill(GBC.HORIZONTAL));
 		panelOutputs.add(radioPanel);
+		*/
 
 
 
@@ -292,7 +295,7 @@ public class ControlTab extends JPanel {
 		labelSpeedAvgVal.setText(String.format("%5.3f mph", myTreadmill.getAverageSpeed()));
 		labelInclineCurVal.setText(Integer.toString(myTreadmill.getIncline()) + " %"); 
 		labelDistanceCurVal.setText(String.format("%5.3f mi", myTreadmill.getDistance()));
-		labelCaloriesCurVal.setText(Integer.toString(myTreadmill.getCalories(age, weight)) + " cal");
+		labelCaloriesCurVal.setText(Integer.toString(myTreadmill.getCalories(age, weight)) + " Cal");
 
 		/* Updates goal labels. */
 		if (goalDist != null)
@@ -306,7 +309,7 @@ public class ControlTab extends JPanel {
 		if (goalCal != null)
 			labelCaloriesTargVal.setText(goalCal.getProgress(myTreadmill));
 		else
-			labelCaloriesTargVal.setText("0 cal");
+			labelCaloriesTargVal.setText("0 Cal");
 	}
 
 	/**
