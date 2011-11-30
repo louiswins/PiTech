@@ -63,14 +63,14 @@ public class ControlTab extends JPanel {
 		/* Set up all the panels, top to bottom, left to right: */
 
 		/* Message Panel */
-		message = new JLabel(DEFAULT_MESSAGE);
-		message.setForeground(Color.blue);
+		message = new JLabel();
 		Font curFont = message.getFont();
 		message.setFont(new Font(curFont.getFontName(), curFont.getStyle(), 15));
 
 		JPanel panelMessage = new JPanel(); 
 		panelMessage.setBorder(BorderFactory.createLineBorder(Color.black));
 		panelMessage.add(message);
+		writeMessage(DEFAULT_MESSAGE);
 
 
 
@@ -296,7 +296,12 @@ public class ControlTab extends JPanel {
 	private void updateLabels() {
 		labelTimeElapsedVal.setText(String.format("%02d:%02d:%02d", (int)(runner.getTimeElapsed() / 3600),
 				(int)(runner.getTimeElapsed() / 60) % 60, (int)(runner.getTimeElapsed()) % 60));
-		labelSpeedCurVal.setText(String.format("%5.3f mph", runner.getSpeed()));
+		// DIRTY HACK: If the treadmill is paused, the runner is too.
+		if (myTreadmill.getState() == Session.State.RUNNING) {
+			labelSpeedCurVal.setText(String.format("%5.3f mph", runner.getSpeed()));
+		} else {
+			labelSpeedCurVal.setText("0.000 mph");
+		}
 		labelSpeedAvgVal.setText(String.format("%5.3f mph", runner.getAverageSpeed()));
 		// The treadmill takes care of incline values.
 		labelInclineCurVal.setText(Integer.toString(myTreadmill.getIncline()) + " %"); 
@@ -324,6 +329,16 @@ public class ControlTab extends JPanel {
 	 * @param msg the message to write
 	 */
 	private void writeMessage(String msg) {
+		writeMessage(msg, Color.blue);
+	}
+	/**
+	 * Writes a message in a certain color to the messagebox.
+	 *
+	 * @param msg the message to write
+	 * @param col the color of the message
+	 */
+	private void writeMessage(String msg, Color col) {
+		message.setForeground(col);
 		message.setText(msg);
 	}
 
@@ -445,7 +460,7 @@ public class ControlTab extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			long curTime = System.currentTimeMillis();
 			if (!myTreadmill.update((double)(curTime - lastCall) / 1000.0 * timeMultiplier)) {
-				writeMessage("User fell off the treadmill! Emergency stop!");
+				writeMessage("User fell off the treadmill! Emergency stop!", Color.red);
 				pause();
 			} else {
 				if (goalDist != null && goalDist.checkIfDone()) {
