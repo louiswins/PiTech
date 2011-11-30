@@ -14,14 +14,14 @@ public class History extends JPanel {
 	private int nlines;
 
 	History() {
+		super(new GridBagLayout());
 		area = new JTextArea();
 		area.setFont(new Font("Sans", Font.PLAIN, 14));
 		area.setEditable(false);
 
 		scroller = new JScrollPane(area);
 		scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scroller.setPreferredSize(new Dimension(610,270));
-		add(scroller);
+		add(scroller, new GBC(0,0).weight(1,1).fill(GBC.BOTH));
 
 		resetHistory();
 	}
