@@ -204,11 +204,19 @@ public class User {
 	private void saveHistoryData() {
 		totalDistanceCache += currentValues.getDistance();
 		history.add(currentValues);
+		addHistoryLine(currentValues);
+	}
+
+	/**
+	 * Adds a single line to the History tab.
+	 *
+	 * @param which HistoryData value to add
+	 */
+	private void addHistoryLine(HistoryData which) {
 		/* Let's only do this if the time is >= 1s because otherwise the
 		 * user was probably just scrolling. */
-		if (currentValues.getTime() < 1.0) return;
-		/* Write to history tab. */
-		historyStore.updateHistory(currentValues.toString(age, weight));
+		if (which.getTime() < 1.0) return;
+		historyStore.updateHistory(which.toString(age, weight));
 	}
 
 	/**
@@ -217,7 +225,7 @@ public class User {
 	public void recalculateHistory() {
 		historyStore.resetHistory();
 		for (HistoryData curHist : history) {
-			historyStore.updateHistory(curHist.toString(age, weight));
+			addHistoryLine(curHist);
 		}
 	}
 }
