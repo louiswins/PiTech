@@ -6,19 +6,17 @@ import java.awt.event.*;
 /**
  * Shows the history of the current running session.
  *
- * @version 0.7
+ * @version 0.8
  */
-public class History extends JPanel{
+public class History extends JPanel {
+	private JTextArea area;
+	private JScrollPane scroller;
+	private int nlines;
 
-	JTextArea area;
-	JScrollPane scroller;
-	Dimension size;
-	History(){
-		//size = new Dimension(600,270);
+	History() {
 		area = new JTextArea();
+		area.setFont(new Font("Sans", Font.PLAIN, 14));
 		area.setEditable(false);
-		//area.setPreferredSize(size);
-		add(area);
 
 		scroller = new JScrollPane(area);
 		scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -28,20 +26,30 @@ public class History extends JPanel{
 		resetHistory();
 	}
 
+	/** Prints the column headers */
+	private void showHeaders() {
+		updateHistory("Distance\tTime\tSpeed\tIncline\tCalories");
+		nlines = 0;
+	}
+
 	/**
 	 * Adds to the remembered history data.
 	 *
 	 * @param line the data to add
 	 */
 	public void updateHistory(String line) {
-		area.append(line + "\n");					//you can use area.setText("text") if you prefer
+		area.append("\n" + line);
+		if (++nlines == 15) {
+			showHeaders();
+		}
+		area.setCaretPosition(area.getDocument().getLength());
 	}
 
 	/**
 	 * Resets the remembered history data.
 	 */
 	public void resetHistory() {
-		area.setText("User History for Current Session\n\n" +
-			     "Distance\tTime\tSpeed\tIncline\tCalories\n");
+		area.setText("User History for Current Session\n");
+		showHeaders();
 	}
 }
