@@ -36,9 +36,8 @@ public class ControlTab extends JPanel {
 
 	/* Other instance variables */
 	private Session myTreadmill;
-	private int age, weight;
+	private User runner;
 	private int timeMultiplier;
-	private int timeSinceLastChange;
 	private Timer timer;
 	private Goal goalDist, goalDur, goalCal;
 
@@ -60,7 +59,7 @@ public class ControlTab extends JPanel {
 		ButtonListener bl = new ButtonListener();
 		SpinnerListener sl = new SpinnerListener();
 
-
+		/* {{{ */
 		/* Set up all the panels, top to bottom, left to right: */
 
 		/* Message Panel */
@@ -274,12 +273,12 @@ public class ControlTab extends JPanel {
 		add(panelMessage, new GBC(0, 0).fill(GBC.HORIZONTAL));
 		add(panelOutputs, new GBC(0, 10).weight(1, 1).fill(GBC.BOTH));
 		add(panelInputs, new GBC(0, 20).weight(1, 1).fill(GBC.BOTH));
+		/* }}} */
 		
 
 		/* Set up the instance variables. */
-		age = 30;
-		weight = 150;
-		myTreadmill = new Session(hist, age, weight);
+		runner = new User(hist);
+		myTreadmill = new Session(runner);
 		timeMultiplier = 4;
 
 		Timer timer = new Timer(1000 / FPS, new TimerListener());
@@ -295,25 +294,26 @@ public class ControlTab extends JPanel {
 	 * Updates all the labels based on session.
 	 */
 	private void updateLabels() {
-		labelTimeElapsedVal.setText(String.format("%02d:%02d:%02d", (int)(myTreadmill.getTimeElapsed() / 3600),
-				(int)(myTreadmill.getTimeElapsed() / 60) % 60, (int)(myTreadmill.getTimeElapsed()) % 60));
-		labelSpeedCurVal.setText(String.format("%5.3f mph", (double)myTreadmill.getSpeed() / 10.0));
-		labelSpeedAvgVal.setText(String.format("%5.3f mph", myTreadmill.getAverageSpeed()));
+		labelTimeElapsedVal.setText(String.format("%02d:%02d:%02d", (int)(runner.getTimeElapsed() / 3600),
+				(int)(runner.getTimeElapsed() / 60) % 60, (int)(runner.getTimeElapsed()) % 60));
+		labelSpeedCurVal.setText(String.format("%5.3f mph", runner.getSpeed()));
+		labelSpeedAvgVal.setText(String.format("%5.3f mph", runner.getAverageSpeed()));
+		// The treadmill takes care of incline values.
 		labelInclineCurVal.setText(Integer.toString(myTreadmill.getIncline()) + " %"); 
-		labelDistanceCurVal.setText(String.format("%5.3f mi", myTreadmill.getDistance()));
-		labelCaloriesCurVal.setText(Integer.toString(myTreadmill.getCalories(age, weight)) + " Cal");
+		labelDistanceCurVal.setText(String.format("%5.3f mi", runner.getDistance()));
+		labelCaloriesCurVal.setText(Integer.toString(runner.getCalories()) + " Cal");
 
 		/* Updates goal labels. */
 		if (goalDist != null)
-			labelDistanceTargVal.setText(goalDist.getProgress(myTreadmill));
+			labelDistanceTargVal.setText(goalDist.getProgress());
 		else
 			labelDistanceTargVal.setText("0.000 mi");
 		if (goalDur != null)
-			labelTimeTargVal.setText(goalDur.getProgress(myTreadmill));
+			labelTimeTargVal.setText(goalDur.getProgress());
 		else
 			labelTimeTargVal.setText("00:00:00");
 		if (goalCal != null)
-			labelCaloriesTargVal.setText(goalCal.getProgress(myTreadmill));
+			labelCaloriesTargVal.setText(goalCal.getProgress());
 		else
 			labelCaloriesTargVal.setText("0 Cal");
 	}
@@ -344,24 +344,20 @@ public class ControlTab extends JPanel {
 	private void setGoal() {
 		if (radioButtonsGoalRun[0].isSelected()) {
 			writeMessage("Distance goal set.");
-			goalDist = new DistanceGoal(Double.parseDouble(goalTextField.getText()), myTreadmill);
+			goalDist = new DistanceGoal(Double.parseDouble(goalTextField.getText()), runner);
 		} else if (radioButtonsGoalRun[1].isSelected()) {
 			writeMessage("Duration goal set.");
-			goalDur = new DurationGoal(Double.parseDouble(goalTextField.getText()), myTreadmill);
+			goalDur = new DurationGoal(Double.parseDouble(goalTextField.getText()), runner);
 		} else {
 			writeMessage("Calories goal set.");
-			goalCal = new CalorieGoal(Integer.parseInt(goalTextField.getText()), age, weight, myTreadmill);
+			goalCal = new CalorieGoal(Integer.parseInt(goalTextField.getText()), runner);
 		}
 		/* if the session is paused or stopped,
 		   and we hit the goalStartButton, it starts it back up */
 		if (myTreadmill.getState() == Session.State.STOPPED) {
-			quickStart_Resume.setText("QuickStart");
-			pause_Stop.setText("Pause");
-			myTreadmill.start();
+			start();
 		} else if (myTreadmill.getState() == Session.State.PAUSED) {
-			quickStart_Resume.setText("QuickStart");
-			pause_Stop.setText("Pause");
-			myTreadmill.resume();
+			resume();
 		}
 	}
 
@@ -370,32 +366,16 @@ public class ControlTab extends JPanel {
 		public void actionPerformed(ActionEvent event) {
 			Object src = event.getSource();
 			if (src == quickStart_Resume) {
-				quickStart_Resume.setText("QuickStart");
-				pause_Stop.setText("Pause");
 				if (myTreadmill.getState() == Session.State.STOPPED) {
-					Double val = (Double)(sSpeed.getValue());
-					// always best not to compare floats directly
-					if (val.doubleValue() < 0.05) {
-						sSpeed.setValue(new Double(1.0));
-					}
-					myTreadmill.start();
+					start();
 				} else {
-					myTreadmill.resume();
+					resume();
 				}
 			} else if (src == pause_Stop) {
-				pause_Stop.setText("Stop");
 				if (myTreadmill.getState() == Session.State.RUNNING) {
-					quickStart_Resume.setText("Resume");
-					myTreadmill.pause();
+					pause();
 				} else {
-					quickStart_Resume.setText("QuickStart");
-					myTreadmill.stop();
-					/* Reset speed and incline */
-					sSpeed.setValue(new Double(0.0));
-					sIncline.setValue(new Integer(0));
-					goalDist = null;
-					goalDur = null;
-					goalCal = null;
+					stop();
 				}
 			} else if (src == goal_Run_Start) {
 				if (goalTextField.getText().equals("")) {
@@ -442,6 +422,12 @@ public class ControlTab extends JPanel {
 				}
 			} else if (sp == sIncline) {
 				myTreadmill.setIncline(val.intValue());
+			} else if (sp == sUserSpeed) {
+				runner.setSpeed(Math.round(10*val.floatValue()));
+			} else if (sp == sAge) {
+				runner.setAge(val.intValue());
+			} else if (sp == sWeight) {
+				runner.setWeight(val.intValue());
 			}
 			updateLabels();
 		}
@@ -458,37 +444,73 @@ public class ControlTab extends JPanel {
 
 		public void actionPerformed(ActionEvent e) {
 			long curTime = System.currentTimeMillis();
-			myTreadmill.update((double)(curTime - lastCall) / 1000.0 * timeMultiplier);
-
-			if (goalDist != null) {
-				if (goalDist.checkIfDone(myTreadmill)) {
+			if (!myTreadmill.update((double)(curTime - lastCall) / 1000.0 * timeMultiplier)) {
+				writeMessage("User fell off the treadmill! Emergency stop!");
+				pause();
+			} else {
+				if (goalDist != null && goalDist.checkIfDone()) {
 					writeMessage("Distance goal reached!");
 					goalDist = null;
-				} else {
-					//writeMessage(DEFAULT_MESSAGE);
 				}
-			}
 
-			if (goalDur != null) {
-				if (goalDur.checkIfDone(myTreadmill)) {
+				if (goalDur != null && goalDur.checkIfDone()) {
 					writeMessage("Duration goal reached!");
 					goalDur = null;
-				} else {
-					//writeMessage(DEFAULT_MESSAGE);
 				}
-			}
 
-			if (goalCal != null) {
-				if (goalCal.checkIfDone(myTreadmill)) {
+				if (goalCal != null && goalCal.checkIfDone()) {
 					writeMessage("Calories goal reached!");
 					goalCal = null;
-				} else {
-					//writeMessage(DEFAULT_MESSAGE);
 				}
 			}
 
 			updateLabels();
 			lastCall = curTime;
 		}
+	}
+
+
+	/** Starts treadmill. */
+	private void start() {
+		myTreadmill.start();
+		writeMessage(DEFAULT_MESSAGE);
+		quickStart_Resume.setText("QuickStart");
+		pause_Stop.setText("Pause");
+
+		// If it's at 0, start running at 1mph.
+		Double val = (Double)(sSpeed.getValue());
+		// always best not to compare floats directly
+		if (val.doubleValue() < 0.05) {
+			sSpeed.setValue(new Double(1.0));
+			if (runner.getSpeed() < 0.05) {
+				sUserSpeed.setValue(new Double(1.0));
+			}
+		}
+	}
+	/** Stops treadmill. */
+	private void stop() {
+		myTreadmill.stop();
+		quickStart_Resume.setText("QuickStart");
+		pause_Stop.setText("Stop");
+		sSpeed.setValue(new Double(0.0));
+		sIncline.setValue(new Integer(0));
+		sUserSpeed.setValue(new Double(0.0));
+		// Reset goals
+		goalDist = null;
+		goalDur = null;
+		goalCal = null;
+	}
+	/** Pauses treadmill. */
+	private void pause() {
+		myTreadmill.pause();
+		quickStart_Resume.setText("Resume");
+		pause_Stop.setText("Stop");
+	}
+	/** Resumes treadmill. */
+	private void resume() {
+		myTreadmill.resume();
+		writeMessage(DEFAULT_MESSAGE);
+		quickStart_Resume.setText("QuickStart");
+		pause_Stop.setText("Pause");
 	}
 }

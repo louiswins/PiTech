@@ -1,18 +1,21 @@
 public class DistanceGoal implements Goal {
 	private double goal;
 	private double startDist;
+	private User runner;
 
-	public DistanceGoal(double dist, Session session) {
+	public DistanceGoal(double dist, User runner) {
 		goal = dist;
-		startDist = session.getDistance();
+		this.runner = runner;
+		startDist = runner.getDistance();
 	}
 
 	/** {@inheritDoc} */
-	public boolean checkIfDone(Session session) {
-		return (session.getDistance() - startDist) >= goal;
+	public boolean checkIfDone() {
+		return (runner.getDistance() - startDist) >= goal;
 	}
 
-	public String getProgress(Session session) {
-		return String.format("%5.3f mi", goal - (session.getDistance() - startDist));
+	/** {@inheritDoc} */
+	public String getProgress() {
+		return String.format("%5.3f mi", goal - (runner.getDistance() - startDist));
 	}
 }

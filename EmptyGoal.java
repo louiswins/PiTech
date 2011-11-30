@@ -5,11 +5,12 @@ public class EmptyGoal implements Goal {
 	 *
 	 * @return false
 	 */
-	public boolean checkIfDone(Session session) {
+	public boolean checkIfDone() {
 		return false;
 	}
 
-	public String getProgress(Session session) {
+	/** {@inheritDoc} */
+	public String getProgress() {
 		return "empty";
 	}
 }

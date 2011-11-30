@@ -83,7 +83,7 @@ public class HistoryData {
 	 * @param weight weight in lbs
 	 * @return       formatted value
 	 */
-	public String getString(int age, int weight) {
+	public String toString(int age, int weight) {
 		return String.format("%5.3f mi", getDistance()) + "\t" +
 		       String.format("%02d:%02d:%02d", (int)(getTime() / 3600), (int)(getTime() / 60) % 60,
 				       (int)(getTime()) % 60) + "\t" +

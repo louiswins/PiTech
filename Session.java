@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Stores the main variables and session data. This class is in charge of all
  * the visible "stuff". It knows what the treadmill is doing, what the
@@ -9,17 +6,10 @@ import java.util.List;
  * @version 1.0
  */
 public class Session {
-	private List<HistoryData> history;
-	private HistoryData currentValues;
 	private State state;
-	private History historyStore;
-	private int age, weight;
-
-	/* Cache variables: these should be the sums of all the values in
-	 * this.history; to get usable data while running, add in the values in
-	 * currentValues. */
-	private double timeElapsedCache;
-	private double totalDistanceCache;
+	private int speed;
+	private int incline;
+	private User runner;
 
 	/**
 	 * State of the treadmill.
@@ -31,19 +21,15 @@ public class Session {
 
 
 	/**
-	 * Sets up the treadmill and puts it in a stopped state. To actually
-	 * start the treadmill, you must call {@link #start(int, int)}.
+	 * Sets up the treadmill and puts it in a stopped state.
+	 *
+	 * @param runner the treadmill runner
 	 */
-	public Session(History hist, int age, int weight) {
-		// Pre-allocate memory for 50. Nice!
-		history = new ArrayList<HistoryData>(50);
-		historyStore = hist;
-		this.age = age;
-		this.weight = weight;
-		timeElapsedCache = 0;
-		totalDistanceCache = 0.0;
-		currentValues = new HistoryData(0, 0);
+	public Session(User runner) {
 		state = State.STOPPED;
+		speed = 0;
+		incline = 0;
+		this.runner = runner;
 	}
 
 
@@ -52,11 +38,11 @@ public class Session {
 	 * getWhatever functions.
 	 *
 	 * @param timespan amount of time in s since you last called update().
+	 * @return         if the user is still on the treadmill
 	 */
-	public void update(double timespan) {
-		if (state != State.RUNNING) return;
-		timeElapsedCache += timespan;
-		currentValues.update(timespan);
+	public boolean update(double timespan) {
+		if (state != State.RUNNING) return true;
+		return runner.update(timespan, speed);
 	}
 
 	/**
@@ -65,11 +51,7 @@ public class Session {
 	 * @param sp new speed in tenths of a mile per hour
 	 */
 	public void setSpeed(int sp) {
-		int inclineSetting = currentValues.getIncline();
-		if (currentValues.getTime() > 0.0) {
-			saveHistoryData();
-		}
-		currentValues = new HistoryData(sp, inclineSetting);
+		speed = sp;
 	}
 	/**
 	 * Sets a new inclination for the treadmill.
@@ -77,11 +59,8 @@ public class Session {
 	 * @param inc new inclination in percent
 	 */
 	public void setIncline(int inc) {
-		int speedSetting = currentValues.getSpeed();
-		if (currentValues.getTime() > 0.0) {
-			saveHistoryData();
-		}
-		currentValues = new HistoryData(speedSetting, inc);
+		incline = inc;
+		runner.setIncline(inc);
 	}
 
 
@@ -91,67 +70,19 @@ public class Session {
 	 * @return current inclination in percent
 	 */
 	public int getIncline() {
-		return currentValues.getIncline();
+		return incline;
 	}
 	/**
 	 * Speed of the treadmill.
 	 *
-	 * @return current speed in tenths of a mile per hour
+	 * @return current speed in mph
 	 */
-	public int getSpeed() {
+	public double getSpeed() {
 		if (state == State.RUNNING) {
-			return currentValues.getSpeed();
-		} else {
-			return 0;
-		}
-	}
-
-	/**
-	 * Average speed throughout the session.
-	 *
-	 * @return average speed in miles per hour
-	 */
-	public double getAverageSpeed() {
-		if (timeElapsedCache > 0.0) {
-			return getDistance() * 3600.0 / timeElapsedCache;
+			return speed / 10.0;
 		} else {
 			return 0.0;
 		}
-	}
-
-	/**
-	 * Total distance run.
-	 *
-	 * @return distance run in miles
-	 */
-	public double getDistance() {
-		return totalDistanceCache + currentValues.getDistance();
-	}
-	/**
-	 * Total time spent running
-	 *
-	 * @return time run in seconds
-	 */
-	public double getTimeElapsed() {
-		return timeElapsedCache;
-	}
-
-	/**
-	 * Calories burnt.
-	 *
-	 * @param age    age of runner in years.
-	 * @param weight weight of runner in lbs.
-	 * @return calories burnt while running
-	 */
-	public int getCalories(int age, int weight) {
-		if (state == State.STOPPED) {
-			return 0;
-		}
-		double cal = currentValues.getCalories(age, weight);
-		for (HistoryData curHist : history) {
-			cal += curHist.getCalories(age, weight);
-		}
-		return (int)cal;
 	}
 
 	/**
@@ -168,16 +99,8 @@ public class Session {
 	 * elapsed, distance run, etc.
 	 */
 	public void stop() {
-		timeElapsedCache = 0.0;
-		totalDistanceCache = 0.0;
-		
-		if (state != State.STOPPED) {
-			// If the state is already stopped, no need to
-			// reallocate new objects
-			history = new ArrayList<HistoryData>(50);
-			currentValues = new HistoryData(0, 0);
-		}
 		state = State.STOPPED;
+		runner.reset();
 	}
 	/**
 	 * Starts the treadmill. If the treadmill is currently running or
@@ -188,7 +111,9 @@ public class Session {
 	 */
 	public void start(int speed, int incline) {
 		if (state != State.STOPPED) return;
-		currentValues = new HistoryData(speed, incline);
+		this.speed = speed;
+		this.incline = incline;
+		runner.setIncline(incline);
 		start();
 	}
 	/**
@@ -197,11 +122,9 @@ public class Session {
 	 */
 	public void start() {
 		if (state != State.STOPPED) return;
-		if (currentValues.getSpeed() == 0.0) {
-			currentValues = new HistoryData(10, currentValues.getIncline());
-		}
+		runner.reorient();
+		runner.recalculateHistory();
 		state = State.RUNNING;
-		historyStore.resetHistory();
 	}
 	/**
 	 * Pauses the treadmill. All data are retained. If the treadmill is
@@ -217,35 +140,7 @@ public class Session {
 	 */
 	public void resume() {
 		if (state != State.PAUSED) return;
+		runner.reorient();
 		state = State.RUNNING;
-	}
-
-
-	/**
-	 * Saves the history data. Call this when you want to put
-	 * <tt>currentValues</tt> into the <tt>history</tt> data store.
-	 */
-	private void saveHistoryData() {
-		updateCaches(currentValues.getDistance());
-		history.add(currentValues);
-		/* Let's only do this if the time is > .5s because otherwise the
-		 * user was probably just scrolling. */
-		if (currentValues.getTime() < 0.5) return;
-		/* Write to history tab. */
-		historyStore.updateHistory(currentValues.getString(age, weight));
-	}
-	/**
-	 * Updates the distance cache. Should be called every time a {@link
-	 * HistoryData} object is added to the <tt>history</tt> data store. If
-	 * you forget to call this method, at least {@link
-	 * #getCalories(int,int)} will be off.
-	 *
-	 * <p>Note that {@link #saveHistoryData()} calls this method, so if you
-	 * operate through it, you will be A-OK.
-	 *
-	 * @param distToAdd additional distance in miles
-	 */
-	private void updateCaches(double distToAdd) {
-		totalDistanceCache += distToAdd;
 	}
 }

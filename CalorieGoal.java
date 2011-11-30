@@ -1,21 +1,21 @@
 public class CalorieGoal implements Goal {
 	private int goal;
-	private int age, weight;
+	private User runner;
 	private int startCals;
 
-	public CalorieGoal(int cal, int age, int weight, Session session) {
+	public CalorieGoal(int cal, User runner) {
 		goal = cal;
-		this.age = age;
-		this.weight = weight;
-		startCals = session.getCalories(age, weight);
+		this.runner = runner;
+		startCals = runner.getCalories();
 	}
 
 	/** {@inheritDoc} */
-	public boolean checkIfDone(Session session) {
-		return (session.getCalories(age, weight) - startCals) >= goal;
+	public boolean checkIfDone() {
+		return (runner.getCalories() - startCals) >= goal;
 	}
 
-	public String getProgress(Session session) {
-		return Integer.toString(goal - (session.getCalories(age,weight) - startCals)) + " cal";
+	/** {@inheritDoc} */
+	public String getProgress() {
+		return Integer.toString(goal - (runner.getCalories() - startCals)) + " cal";
 	}
 }
