@@ -13,10 +13,12 @@
 	</target>
 
 	<target name="jar" depends="compile" description="Create jar">
-		<jar jarfile="PiTech.jar" basedir="${builddir}">
+		<jar jarfile="PiTech.jar">
 			<manifest>
 				<attribute name="Main-Class" value="DisplayInterface"/>
 			</manifest>
+			<fileset dir="${builddir}"/>
+			<fileset dir="." includes="rsc/*.*"/>
 		</jar>
 	</target>
 

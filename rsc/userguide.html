@@ -1,0 +1,358 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+<TITLE>πTech Treadmill Simulator Software Users’ Guide</TITLE>
+<LINK REL="STYLESHEET" HREF="userguide.css">
+</HEAD>
+<BODY >
+<P>
+<H1 ALIGN="CENTER">πTech Treadmill Simulator Software
+<BR>
+Users’ Guide</H1>
+<P>
+
+<H1><A NAME="SECTION00030000000000000000">
+1 Introduction</A>
+</H1>
+The goal of this software product is to simulate the use of a treadmill. The
+program itself has two main sections:
+
+<P>
+
+<OL>
+<LI>Treadmill control, which allows you to control the virtual treadmill and
+runner. This is described in sections <A HREF="#sec:control">3</A> and <A HREF="#sec:goals">4</A>.
+</LI>
+<LI>Workout History, which allows you to view the history of the runner over
+the course of all workouts. This is described in section <A HREF="#sec:history">5</A>.
+</LI>
+</OL>
+
+<P>
+
+<H1><A NAME="SECTION00040000000000000000">
+2 Simulator Interface</A>
+</H1>
+
+<DIV ALIGN="CENTER"><A NAME="25"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 1:</STRONG>
+Interface of the Software</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER"><IMG ALIGN="BOTTOM" BORDER="0"
+ SRC="./pitech-labels.png"
+ ALT="Image pitech-labels">
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+<DL>
+<DT><STRONG>Calorie Display</STRONG></DT>
+<DD>These are how many calories have been burned during the
+workout so far.
+</DD>
+<DT><STRONG>Distance Display</STRONG></DT>
+<DD>This is the distance someone would have traveled if they
+were running on the ground.
+</DD>
+<DT><STRONG>Goal Selection</STRONG></DT>
+<DD>These three radio buttons select which type of goal to
+set.
+</DD>
+<DT><STRONG>Goal Target</STRONG></DT>
+<DD>Input the target distance, target duration, or target
+calories in this area.
+</DD>
+<DT><STRONG>Incline Control</STRONG></DT>
+<DD>Increase or decrease the current belt incline.
+</DD>
+<DT><STRONG>Incline Display</STRONG></DT>
+<DD>This is the current inclination, in percent.
+</DD>
+<DT><STRONG>Message Area</STRONG></DT>
+<DD>Displays important status messages from the treadmill.
+</DD>
+<DT><STRONG>Pause/Stop</STRONG></DT>
+<DD>Press this button once to pause the simulator. Press it again,
+while paused, to stop the simulator completely.
+</DD>
+<DT><STRONG>Speed Control</STRONG></DT>
+<DD>Increase or decrease the current belt speed.
+</DD>
+<DT><STRONG>Speed Display</STRONG></DT>
+<DD>This is the current speed setting.
+</DD>
+<DT><STRONG>QuickStart/Resume</STRONG></DT>
+<DD>Starts the simulator if it is currently stopped. Also
+resumes the session if the simulator is currently paused.
+</DD>
+<DT><STRONG>Time Display</STRONG></DT>
+<DD>This displays the time elapsed so far.
+</DD>
+</DL>
+
+<P>
+
+<H1><A NAME="SECTION00050000000000000000"></A> <A NAME="sec:control"></A>
+<BR>
+3 Controlling the Belt
+</H1>
+
+<P>
+There are two main ways to control the belt: manual user control (the default),
+and with a program. With manual user control, you have full control over the
+speed and inclination of the treadmill’s belt, while when using a program, the
+software will control the speed and inclination.
+
+<P>
+
+<OL>
+<LI>Manual user control, in which the user changes the speed and incline
+manually as he is using the simulator. The simulated track adjusts according to
+the updated changes and stay at those settings unless the settings are changed
+again manually.
+
+<P>
+</LI>
+<LI>Preset workout, a particular pattern that the track follows. The system
+automatically adjusts the speed and incline at preset intervals to follow that
+particular pattern. There are a few different patterns that the system can
+follow.
+
+<P>
+</LI>
+</OL>
+
+<P>
+The preset workout plans are a full-on, immersive workout. Therefore, to apply
+or remove a program, the treadmill must be stopped.
+
+<P>
+In addition to controlling the belt, you can set goals for yourself.  When you
+reach the goal, the program will automatically alert you in the <B>Message
+Area</B>. For more information on setting goals, see section sec:goals.
+
+<P>
+
+<H2><A NAME="SECTION00051000000000000000"></A> <A NAME="sec:manual"></A>
+<BR>
+3.1 Manual User Control
+</H2>
+
+<P>
+
+<OL>
+<LI>If you are already running under a preset workout plan, you will have to
+stop the treadmill. Press the <B>Pause/Stop</B> button until the treadmill is
+fully cleared.
+
+<P>
+</LI>
+<LI>Press <B>QuickStart</B>. The simulator belt will begin moving slowly at the
+preset speed of 1.
+
+<P>
+</LI>
+<LI><B>Change the speed</B> by editing the <B>Speed Control</B>. You can use
+the <B>up and down arrows</B>, or enter the value directly into the <B>text
+box</B>. The speed has a minimum value of 0 mph, and a maximum of 15 mph.  You can
+adjust it in increments of 0.1 mph.
+
+<P>
+</LI>
+<LI><B>Change the incline</B> by editing the <B>Incline Control</B>. You can
+use the <B>up and down arrows</B>, or enter the value directly into the <B>text
+box</B>. The inclination has a minimum value of 0%, and a maximum of 15%.
+
+<P>
+</LI>
+<LI>When the treadmill is running, pressing <B>Pause</B> will result in the
+belt slowing down and coming to a stop. The <B>QuickStart/Resume</B> button will
+display <B>Resume</B>, and the <B>Pause/Stop</B> button will display <B>Stop</B>.
+Also, a 5:00 timer will appear and start counting down. If <B>Resume</B> is
+pressed before the 5:00 timer is up, the belt resumes with the same speed and
+incline it had before Pause was pressed. If the timer runs out, then the
+treadmill resets.
+
+<P>
+</LI>
+<LI>To resume the treadmill with the same speed and incline when paused,
+press <B>Resume</B>.
+
+<P>
+</LI>
+<LI>If the user presses <B>Stop</B> while the treadmill is paused, or if the
+5:00 timer runs out, then the treadmill will become stopped. When this happens,
+the speed and inclination are both reset to 0, and any goals or programs are
+lost. Also, the <B>QuickStart/Resume</B> button displays <B>QuickStart</B>.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H2><A NAME="SECTION00052000000000000000"></A> <A NAME="sec:programs"></A>
+<BR>
+3.2 Using a Preset Workout Plan (Automatic
+Control)
+</H2>
+
+<P>
+You can use a preset workout plan to let the simulator adjust the speed and
+incline of the workout. You can still adjust the speed and incline manually
+during the preset.
+
+<P>
+There are a few types of workout programs to choose from:
+
+<P>
+
+<UL>
+<LI>Cardio,
+</LI>
+<LI>Cross Country,
+</LI>
+<LI>Sprint, and
+</LI>
+<LI>Weight Loss.
+</LI>
+</UL>
+
+<P>
+
+<OL>
+<LI>If you are already running under another workout plan, or if you are
+running manually, you will have to stop the treadmill. Press the
+<B>Pause/Stop</B> button until the treadmill is fully cleared.
+
+<P>
+</LI>
+<LI>Use the <B>Program Control</B> to select an available program.
+
+<P>
+</LI>
+<LI>All controls in the manual user control, as described in section
+sec:manual, are also available, but the treadmill will also automatically
+adjust the speed and incline.
+
+<P>
+</LI>
+</OL>
+
+<P>
+
+<H1><A NAME="SECTION00060000000000000000"></A> <A NAME="sec:goals"></A>
+<BR>
+4 Goals
+</H1>
+
+<P>
+Independent of the type of workout you choose, you have the option of setting a
+target goal. This is a useful option which will alert you when you have run a
+certain distance, burned a certain number of calories, or run for a certain
+length of time.
+
+<P>
+
+<H2><A NAME="SECTION00061000000000000000">
+4.1 Setting Goals</A>
+</H2>
+
+<P>
+
+<OL>
+<LI>Use the <B>Goal Selection</B> options to select which goal you will work
+toward: a distance-, duration-, or calorie-based goal.
+</LI>
+<LI>Use the <B>Goal Target</B> inputs to enter your goal: for distance, how far
+you want to run; for duration, how much time you want to spend running; or for
+calorie, how many calories you want to burn.
+</LI>
+<LI>The value you pick will appear respectively in the <B>Distance</B>,
+<B>Time</B>, or <B>Calorie Display</B> under <B>Target</B>. If there is no goal of
+that type active, the <B>Target</B> will display zero.
+</LI>
+<LI>Press <B>Goal Run Start</B> to activate your goal.
+</LI>
+<LI>The <B>Goal Run Start</B> button will become an <B>Unset Goal</B> button.
+</LI>
+</OL>
+
+<P>
+
+<H2><A NAME="SECTION00062000000000000000">
+4.2 Changing Goals</A>
+</H2>
+
+<P>
+At any time during a run, you can adjust your goals using the <B>Goal
+Selection</B> and <B>Goal Target</B> inputs.
+
+<P>
+
+<H2><A NAME="SECTION00063000000000000000">
+4.3 Unsetting Goals</A>
+</H2>
+
+<P>
+
+<OL>
+<LI>Select <B>Unset Goal</B> to continue running without the goal.
+</LI>
+<LI>The <B>Goal Target</B> will clear, and the <B>Unset Goal</B> button will
+revert to the <B>Goal Run Start</B> button, ready for another goal.
+</LI>
+<LI>The treadmill will continue moving at the same speed with the same
+inclination.
+</LI>
+</OL>
+
+<P>
+
+<H2><A NAME="SECTION00064000000000000000">
+4.4 Reaching a Goal</A>
+</H2>
+
+<P>
+When you reach a goal, the program displays a message in the <B>Message Area</B>.
+It continues moving at the same speed and incline, and you are free to input
+another goal.
+
+<P>
+
+<H1><A NAME="SECTION00070000000000000000"></A> <A NAME="sec:history"></A>
+<BR>
+5 Viewing Workout History
+</H1>
+
+<P>
+The software stores a detailed history of your workouts and can display several
+statistics to help you track your fitness over a period of time. In addition to
+the information displayed in the <B>Treadmill Tab</B> (such as current speed,
+average speed, current incline, or calories burnt), you can access a long-term
+history of your runs. This information is available at any time from the
+<B>History Tab</B>.
+
+<P>
+
+<H2><A NAME="SECTION00071000000000000000">
+5.1 Viewing the Workout History</A>
+</H2>
+
+<P>
+
+<OL>
+<LI>Select the <B>History Tab</B>.
+</LI>
+<LI>The treadmill, if moving, will continue at the same speed and incline.
+</LI>
+<LI>The program will show your user history, including time, distance, and
+calories burnt per workout.
+</LI>
+<LI>Select the <B>Treadmill Tab</B> to return to the treadmill control.
+</LI>
+</OL>
+</BODY>
+</HTML>

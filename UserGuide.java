@@ -1,8 +1,8 @@
 import javax.swing.*;
-import javax.swing.event.MouseInputAdapter;
+import javax.swing.text.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.*;
+import java.io.IOException;
 
 /**
  * A class to display the User Guide.
@@ -10,31 +10,19 @@ import java.util.*;
  * @version 1.0
  */
 public class UserGuide extends JPanel {
-	private JTextArea area;
+	private JTextComponent area;
 	private JScrollPane scroller;
-	public static final String userGuideString = 
-		"User Guide Goes Here\t\t\tUser Guide Goes Here\n" +
-		"User Guide Goes Here\t\t\tUser Guide Goes Here\n" +
-		"User Guide Goes Here\t\t\tUser Guide Goes Here\n" +
-		"User Guide Goes Here\t\t\tUser Guide Goes Here\n" +
-		"User Guide Goes Here\t\t\tUser Guide Goes Here\n" +
-		"User Guide Goes Here\t\t\tUser Guide Goes Here\n" +
-		"User Guide Goes Here\t\t\tUser Guide Goes Here\n" +
-		"User Guide Goes Here\t\t\tUser Guide Goes Here\n" +
-		"User Guide Goes Here\t\t\tUser Guide Goes Here\n" +
-		"User Guide Goes Here\t\t\tUser Guide Goes Here\n" +
-		"User Guide Goes Here\t\t\tUser Guide Goes Here\n" +
-		"User Guide Goes Here\t\t\tUser Guide Goes Here\n" +
-		"User Guide Goes Here\t\t\tUser Guide Goes Here\n" +
-		"User Guide Goes Here\t\t\tUser Guide Goes Here\n" +
-		"User Guide Goes Here\t\t\tUser Guide Goes Here\n" +
-		"User Guide Goes Here\t\t\tUser Guide Goes Here";
+	private static final java.net.URL userGuideURL = UserGuide.class.getResource("rsc/userguide.html");
+	private static final String errorString = "Error loading User Guide.";
 
 	public UserGuide() {
 		super(new GridBagLayout());
-		area = new JTextArea();
+		try {
+			area = new JEditorPane(userGuideURL);
+		} catch (IOException ioe) {
+			area = new JTextArea(errorString);
+		}
 		area.setEditable(false);
-		area.setText(userGuideString);
 
 		scroller = new JScrollPane(area);
 		scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
