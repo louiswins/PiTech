@@ -136,7 +136,9 @@ public class ControlTab extends JPanel {
 		calPanel.add(labelCaloriesCurVal, new GBC(0, 2).inset(0,0,10));
 		calPanel.add(new JLabel("Target"), new GBC(0, 3));
 		calPanel.add(labelCaloriesTargVal, new GBC(0, 4).inset(0,0,10).anchor(GBC.NORTH));
+		/*
 		calPanel.setBorder(BorderFactory.createMatteBorder(0,0,0,1,Color.BLACK));
+		*/
 		panelOutputs.add(calPanel);
 
 		/* Radio Controls */
