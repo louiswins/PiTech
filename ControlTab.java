@@ -40,6 +40,7 @@ public class ControlTab extends JPanel {
 	private int timeMultiplier;
 	private Timer timer;
 	private Goal goalDist, goalDur, goalCal;
+	private WeightLossProgram wlProg;
 
 
 	/** Maximum speed of the belt. Tenths of a mile per hour */
@@ -187,6 +188,7 @@ public class ControlTab extends JPanel {
 
 		/* Programs */
 		weightLoss = new JButton("Weight Loss");
+		weightLoss.addActionListener(bl);
 		cardio = new JButton("Cardio");
 		hill = new JButton("Hill");
 		random = new JButton("Random");
@@ -229,7 +231,6 @@ public class ControlTab extends JPanel {
 			  if (!((c >= '0') && (c <= '9') ||
 				 (c == KeyEvent.VK_BACK_SPACE) ||
 				 (c == KeyEvent.VK_DELETE))) {
-				//getToolkit().beep();
 				e.consume();
 			  }
 			}
@@ -323,6 +324,10 @@ public class ControlTab extends JPanel {
 			labelCaloriesTargVal.setText(goalCal.getProgress());
 		else
 			labelCaloriesTargVal.setText("0 Cal");
+
+		/* Update spinners. */
+		sSpeed.setValue(myTreadmill.getSpeed());
+		sIncline.setValue(myTreadmill.getIncline());
 	}
 
 	/**
@@ -422,6 +427,14 @@ public class ControlTab extends JPanel {
 				} else {
 					sUserSpeed.setEnabled(true);
 				}
+			} else if (src == weightLoss) {
+				if (wlProg == null) {
+					wlProg = new WeightLossProgram(myTreadmill, runner);
+					writeMessage("Weightloss program started!");
+				} else {
+					wlProg = null;
+					writeMessage("Weightloss program cancelled!");
+				}
 			}
 			updateLabels();
 		}
@@ -478,6 +491,10 @@ public class ControlTab extends JPanel {
 				if (goalCal != null && goalCal.checkIfDone()) {
 					writeMessage("Calories goal reached!");
 					goalCal = null;
+				}
+
+				if (wlProg != null) {
+					wlProg.update((double)(curTime - lastCall) / 1000.0 * timeMultiplier);
 				}
 			}
 
