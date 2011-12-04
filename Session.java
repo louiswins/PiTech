@@ -51,6 +51,7 @@ public class Session {
 	 * @param sp new speed in tenths of a mile per hour
 	 */
 	public void setSpeed(int sp) {
+		System.err.printf("New speed: %f mph\n", sp / 10.0);
 		speed = sp;
 	}
 	/**
@@ -79,10 +80,18 @@ public class Session {
 	 */
 	public double getSpeed() {
 		if (state == State.RUNNING) {
-			return speed / 10.0;
+			return getSetSpeed();
 		} else {
 			return 0.0;
 		}
+	}
+	/**
+	 * Speed treadmill is set at, whether it's running or not.
+	 *
+	 * @return current speed in mph
+	 */
+	public double getSetSpeed() {
+		return speed / 10.0;
 	}
 
 	/**

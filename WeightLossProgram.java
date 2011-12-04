@@ -1,13 +1,17 @@
-public class WeightLossProgram {
-	Session ses;
-	User usr;
-	double timeElapsed;
-	double lockTimer;
-	boolean isIncreasing;
+/**
+ * A Program to help lose weight. It slowly adjusts the speed up and down in a
+ * precisely-calculated manner.
+ *
+ * @version 0.7
+ */
+public class WeightLossProgram extends Program {
+	private double timeElapsed;
+	private double lockTimer;
+	private boolean isIncreasing;
 
-	WeightLossProgram(Session ses, User usr) {
-		this.ses = ses;
-		this.usr = usr;
+	/** {@inheritDoc} */
+	public WeightLossProgram(Session ses, User usr) {
+		super(ses, usr);
 		setSpeed(30);
 		setIncline(00);
 		timeElapsed = 0.0;
@@ -15,20 +19,15 @@ public class WeightLossProgram {
 		isIncreasing = true;
 	}
 
-	public int getSpeed() {
-		return (int)ses.getSpeed()*10;
-	}
-
-	public void setSpeed(int sp) {
-		ses.setSpeed(sp);
-		usr.setSpeed(sp);
-	}
-	
-	public void setIncline(int in) {
-		ses.setIncline(in);
-	}
-
+	/**
+	 * Updates the speed of the treadmill. It alternately climbs and falls
+	 * between 15mph and 30 mph.
+	 *
+	 * @param timespan amount of time since the last call
+	 */
 	public void update(double timespan) {
+		/* We don't do anything if it's paused or stopped. */
+		if (ses.getState() != Session.State.RUNNING) return;
 		timeElapsed += timespan;
 		lockTimer += timespan;
 		if (lockTimer > 1.0) {

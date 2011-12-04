@@ -40,7 +40,7 @@ public class ControlTab extends JPanel {
 	private int timeMultiplier;
 	private Timer timer;
 	private Goal goalDist, goalDur, goalCal;
-	private WeightLossProgram wlProg;
+	private Program prog;
 
 
 	/** Maximum speed of the belt. Tenths of a mile per hour */
@@ -283,6 +283,7 @@ public class ControlTab extends JPanel {
 		runner = new User(hist);
 		myTreadmill = new Session(runner);
 		timeMultiplier = 4;
+		prog = new Program(myTreadmill, runner);
 
 		Timer timer = new Timer(1000 / FPS, new TimerListener());
 		timer.setInitialDelay(0);
@@ -326,7 +327,8 @@ public class ControlTab extends JPanel {
 			labelCaloriesTargVal.setText("0 Cal");
 
 		/* Update spinners. */
-		sSpeed.setValue(myTreadmill.getSpeed());
+		sSpeed.setValue(myTreadmill.getSetSpeed());
+		sUserSpeed.setValue(runner.getSpeed());
 		sIncline.setValue(myTreadmill.getIncline());
 	}
 
@@ -376,11 +378,7 @@ public class ControlTab extends JPanel {
 		}
 		/* if the session is paused or stopped,
 		   and we hit the goalStartButton, it starts it back up */
-		if (myTreadmill.getState() == Session.State.STOPPED) {
-			start();
-		} else if (myTreadmill.getState() == Session.State.PAUSED) {
-			resume();
-		}
+		start();
 	}
 
 	/** Listener for button events. */
@@ -388,17 +386,9 @@ public class ControlTab extends JPanel {
 		public void actionPerformed(ActionEvent event) {
 			Object src = event.getSource();
 			if (src == quickStart_Resume) {
-				if (myTreadmill.getState() == Session.State.STOPPED) {
-					start();
-				} else {
-					resume();
-				}
+				start();
 			} else if (src == pause_Stop) {
-				if (myTreadmill.getState() == Session.State.RUNNING) {
-					pause();
-				} else {
-					stop();
-				}
+				stop();
 			} else if (src == goal_Run_Start) {
 				if (goalTextField.getText().equals("")) {
 					writeMessage("Goal input field is empty.  Please enter a value.");
@@ -428,13 +418,14 @@ public class ControlTab extends JPanel {
 					sUserSpeed.setEnabled(true);
 				}
 			} else if (src == weightLoss) {
-				if (wlProg == null) {
-					wlProg = new WeightLossProgram(myTreadmill, runner);
-					writeMessage("Weightloss program started!");
-				} else {
-					wlProg = null;
+				if (prog instanceof WeightLossProgram) {
+					prog = new Program(myTreadmill, runner);
 					writeMessage("Weightloss program cancelled!");
+				} else {
+					prog = new WeightLossProgram(myTreadmill, runner);
+					writeMessage("Weightloss program started!");
 				}
+				start();
 			}
 			updateLabels();
 		}
@@ -466,7 +457,7 @@ public class ControlTab extends JPanel {
 	/** Listener for timer events. */
 	private class TimerListener implements ActionListener {
 		private long lastCall;
-		
+
 		public TimerListener() {
 			super();
 			lastCall = System.currentTimeMillis();
@@ -476,7 +467,7 @@ public class ControlTab extends JPanel {
 			long curTime = System.currentTimeMillis();
 			if (!myTreadmill.update((double)(curTime - lastCall) / 1000.0 * timeMultiplier)) {
 				writeMessage("User fell off the treadmill! Emergency stop!", Color.red);
-				pause();
+				stop();
 			} else {
 				if (goalDist != null && goalDist.checkIfDone()) {
 					writeMessage("Distance goal reached!");
@@ -493,8 +484,8 @@ public class ControlTab extends JPanel {
 					goalCal = null;
 				}
 
-				if (wlProg != null) {
-					wlProg.update((double)(curTime - lastCall) / 1000.0 * timeMultiplier);
+				if (myTreadmill.getState() == Session.State.RUNNING) {
+					prog.update((double)(curTime - lastCall) / 1000.0 * timeMultiplier);
 				}
 			}
 
@@ -504,47 +495,51 @@ public class ControlTab extends JPanel {
 	}
 
 
-	/** Starts treadmill. */
+	/** Starts or resumes treadmill. */
 	private void start() {
-		myTreadmill.start();
-		writeMessage(DEFAULT_MESSAGE);
-		quickStart_Resume.setText("QuickStart");
-		pause_Stop.setText("Pause");
+		if (myTreadmill.getState() == Session.State.STOPPED) {
+			/* Start */
+			myTreadmill.start();
+			writeMessage(DEFAULT_MESSAGE);
+			quickStart_Resume.setText("QuickStart");
+			pause_Stop.setText("Pause");
 
-		// If it's at 0, start running at 1mph.
-		Double val = (Double)(sSpeed.getValue());
-		// always best not to compare floats directly
-		if (val.doubleValue() < 0.05) {
-			sSpeed.setValue(new Double(1.0));
-			if (runner.getSpeed() < 0.05) {
-				sUserSpeed.setValue(new Double(1.0));
+			// If it's at 0, start running at 1mph.
+			// always best not to compare floats directly
+			if (myTreadmill.getSetSpeed() < 0.05) {
+				sSpeed.setValue(new Double(1.0));
+				if (runner.getSpeed() < 0.05) {
+					sUserSpeed.setValue(new Double(1.0));
+				}
 			}
+		} else if (myTreadmill.getState() == Session.State.PAUSED) {
+			/* Resume */
+			myTreadmill.resume();
+			writeMessage(DEFAULT_MESSAGE);
+			quickStart_Resume.setText("QuickStart");
+			pause_Stop.setText("Pause");
 		}
 	}
-	/** Stops treadmill. */
+	/** Stops or pauses treadmill. */
 	private void stop() {
-		myTreadmill.stop();
-		quickStart_Resume.setText("QuickStart");
-		pause_Stop.setText("Stop");
-		sSpeed.setValue(new Double(0.0));
-		sIncline.setValue(new Integer(0));
-		sUserSpeed.setValue(new Double(0.0));
-		// Reset goals
-		goalDist = null;
-		goalDur = null;
-		goalCal = null;
-	}
-	/** Pauses treadmill. */
-	private void pause() {
-		myTreadmill.pause();
-		quickStart_Resume.setText("Resume");
-		pause_Stop.setText("Stop");
-	}
-	/** Resumes treadmill. */
-	private void resume() {
-		myTreadmill.resume();
-		writeMessage(DEFAULT_MESSAGE);
-		quickStart_Resume.setText("QuickStart");
-		pause_Stop.setText("Pause");
+		if (myTreadmill.getState() == Session.State.RUNNING) {
+			/* Pause */
+			myTreadmill.pause();
+			quickStart_Resume.setText("Resume");
+			pause_Stop.setText("Stop");
+		} else if (myTreadmill.getState() == Session.State.PAUSED) {
+			/* Stop */
+			myTreadmill.stop();
+			quickStart_Resume.setText("QuickStart");
+			pause_Stop.setText("Stop");
+			sSpeed.setValue(new Double(0.0));
+			sIncline.setValue(new Integer(0));
+			sUserSpeed.setValue(new Double(0.0));
+			// Reset goals 'n programs
+			goalDist = null;
+			goalDur = null;
+			goalCal = null;
+			prog = new Program(myTreadmill, runner);
+		}
 	}
 }
