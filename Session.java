@@ -51,7 +51,6 @@ public class Session {
 	 * @param sp new speed in tenths of a mile per hour
 	 */
 	public void setSpeed(int sp) {
-		System.err.printf("New speed: %f mph\n", sp / 10.0);
 		speed = sp;
 	}
 	/**

@@ -9,7 +9,13 @@ public class WeightLossProgram extends Program {
 	private double lockTimer;
 	private boolean isIncreasing;
 
-	/** {@inheritDoc} */
+	/**
+	 * Sets up the program with an initial speed of 3mph and inclination of
+	 * 0%.
+	 *
+	 * @param ses session it is running on
+	 * @param usr virtual runner
+	 */
 	public WeightLossProgram(Session ses, User usr) {
 		super(ses, usr);
 		setSpeed(30);
