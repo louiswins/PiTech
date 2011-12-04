@@ -29,6 +29,10 @@ public class Program {
 		return (int)ses.getSetSpeed()*10;
 	}
 
+	protected int getIncline() {
+		return ses.getIncline();
+	}
+
 	/**
 	 * Sets the speed of the user and treadmill.
 	 *
@@ -38,7 +42,7 @@ public class Program {
 		ses.setSpeed(sp);
 		usr.setSpeed(sp);
 	}
-	
+
 	/**
 	 * Sets the incline of the treadmill.
 	 *

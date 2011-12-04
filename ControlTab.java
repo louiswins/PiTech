@@ -190,8 +190,11 @@ public class ControlTab extends JPanel {
 		weightLoss = new JButton("Weight Loss");
 		weightLoss.addActionListener(bl);
 		cardio = new JButton("Cardio");
+		cardio.addActionListener(bl);
 		hill = new JButton("Hill");
+		hill.addActionListener(bl);
 		random = new JButton("Random");
+		random.addActionListener(bl);
 
 		JPanel panelPrograms = new JPanel(new GridBagLayout());
 		panelPrograms.add(weightLoss, new GBC(20, 0).fill(GBC.BOTH).weight(1,1).inset(0, 0, 3));
@@ -426,7 +429,35 @@ public class ControlTab extends JPanel {
 					writeMessage("Weightloss program started!");
 				}
 				start();
+			} else if (src == cardio) {
+				if (prog instanceof CardioProgram) {
+					prog = new Program(myTreadmill, runner);
+					writeMessage("Cardio program cancelled!");
+				} else {
+					prog = new CardioProgram(myTreadmill, runner);
+					writeMessage("Cardio program started!");
+				}
+				start();
+			} else if (src == hill) {
+				if (prog instanceof HillProgram) {
+					prog = new Program(myTreadmill, runner);
+					writeMessage("Hill program cancelled!");
+				} else {
+					prog = new HillProgram(myTreadmill, runner);
+					writeMessage("Hill program started!");
+				}
+				start();
+			} else if (src == random) {
+				if (prog instanceof RandomProgram) {
+					prog = new Program(myTreadmill, runner);
+					writeMessage("Random program cancelled!");
+				} else {
+					prog = new RandomProgram(myTreadmill, runner);
+					writeMessage("Random program started!");
+				}
+				start();
 			}
+
 			updateLabels();
 		}
 	}
