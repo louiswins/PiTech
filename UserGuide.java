@@ -17,6 +17,8 @@ public class UserGuide extends JPanel {
 
 	public UserGuide() {
 		super(new GridBagLayout());
+		/* If the HTML User Guide is not available, we display an error
+		 * message. */
 		try {
 			area = new JEditorPane(userGuideURL);
 		} catch (IOException ioe) {

@@ -35,7 +35,7 @@ public class HistoryData {
 	 * @return distance run in miles
 	 */
 	public double getDistance() {
-		// miles = miles/hr * s * hr/s
+		// miles = miles/hr * s / (s/hr)
 		return (double)speed/10.0 * duration / 3600.0;
 	}
 
@@ -62,15 +62,13 @@ public class HistoryData {
 
 	/**
 	 * Returns the number of calories burnt during the lifetime of the
-	 * object. Formula is from <a
-	 * href="http://www.runnersworld.com/article/0,7120,s6-242-304-311-8402-0,00.html">Runner's
-	 * World</a>.
+	 * object. Formula is from
+	 * <a href="http://www.runnersworld.com/article/0,7120,s6-242-304-311-8402-0,00.html">Runner's World</a>.
 	 *
 	 * @param age    age of user in years
 	 * @param weight weight in lbs
 	 * @return       calories burnt
 	 */
-	// XXX: This calculation is not very good, it should be changed later
 	// 0.75 * weight * #miles
 	public double getCalories(int age, int weight) {
 		return (0.75 * weight * getDistance());

@@ -73,7 +73,7 @@ public class Session {
 		return incline;
 	}
 	/**
-	 * Speed of the treadmill.
+	 * True speed of the treadmill.
 	 *
 	 * @return current speed in mph
 	 */

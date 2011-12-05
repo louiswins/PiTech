@@ -73,11 +73,11 @@ public class User {
 	 * @return               if the user is safely on the treadmill
 	 */
 	public boolean update(double timeSpan, int treadmillSpeed) {
- 		// feet = 10*mph * s * hr/s * (feet/mile / 10)
+ 		// feet = 10*mph * s / (s/hr) * (feet/mile / 10)
 		position += (currentValues.getSpeed() - treadmillSpeed) * timeSpan / 3600.0 * 528.0;
 		timeElapsedCache += timeSpan;
 		currentValues.update(timeSpan);
-		return (position >= (-1.0) * HALF_TM_LENGTH) && (position <= HALF_TM_LENGTH);
+		return (position >= -HALF_TM_LENGTH) && (position <= HALF_TM_LENGTH);
 	}
 
 	/**
@@ -213,7 +213,7 @@ public class User {
 	 * @param which HistoryData value to add
 	 */
 	private void addHistoryLine(HistoryData which) {
-		/* Let's only do this if the time is >= 1s because otherwise the
+		/* We only do this if the time is >= 1s because otherwise the
 		 * user was probably just scrolling. */
 		if (which.getTime() < 1.0) return;
 		historyStore.updateHistory(which.toString(age, weight));

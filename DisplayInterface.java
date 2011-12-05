@@ -25,7 +25,8 @@ public class DisplayInterface extends JFrame
 	public DisplayInterface()
 	{
 		super("PiTech Treadmill Simulator");
-		/* The following is from
+		/* The platform look-and-feel is much better than the default
+		 * swing one. The following code fragment is from
 		 * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
 		 */
 		try {
@@ -48,7 +49,6 @@ public class DisplayInterface extends JFrame
 
 		getContentPane().add(tPane);
 		setSize(APP_WIDTH, APP_HEIGHT);
-		//pack();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 	}

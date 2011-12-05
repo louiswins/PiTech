@@ -18,7 +18,6 @@ public class ControlTab extends JPanel {
 	private JButton quickStart_Resume, pause_Stop;
 	private JButton goal_Run_Start;
 	private JButton weightLoss, cardio, hill, random;
-	/*private JButton radioOn, radioOff;*/
 	private JSpinner sSpeed, sIncline;
 	private JSpinner sUserSpeed, sAge, sWeight;
 	private JCheckBox lockUserSpeed;
@@ -60,7 +59,6 @@ public class ControlTab extends JPanel {
 		ButtonListener bl = new ButtonListener();
 		SpinnerListener sl = new SpinnerListener();
 
-		/* {{{ */
 		/* Set up all the panels, top to bottom, left to right: */
 
 		/* Message Panel */
@@ -76,7 +74,6 @@ public class ControlTab extends JPanel {
 
 
 		/* Outputs */
-		// JPanel panelOutputs = new JPanel(new GridLayout(1, 6)); 
 		JPanel panelOutputs = new JPanel(new GridLayout(1, 5));
 		panelOutputs.setBorder(BorderFactory.createMatteBorder(0,0,1,1,Color.BLACK));
 
@@ -110,7 +107,7 @@ public class ControlTab extends JPanel {
 		incPanel.add(new JLabel("INCLINE"), new GBC(0, 0).inset(6,0,6).weight(1, 0).anchor(GBC.SOUTH));
 		incPanel.add(new JLabel("Current"), new GBC(0, 1));
 		incPanel.add(labelInclineCurVal, new GBC(0, 2).inset(0,0,10));
-		/* Dirty hack to align labels */
+		/* Include these to align the labels */
 		incPanel.add(new JLabel(" "), new GBC(0, 3));
 		incPanel.add(new JLabel(" "), new GBC(0, 4).inset(0,0,10).anchor(GBC.NORTH));
 		incPanel.setBorder(BorderFactory.createMatteBorder(0,0,0,1,Color.BLACK));
@@ -137,21 +134,7 @@ public class ControlTab extends JPanel {
 		calPanel.add(labelCaloriesCurVal, new GBC(0, 2).inset(0,0,10));
 		calPanel.add(new JLabel("Target"), new GBC(0, 3));
 		calPanel.add(labelCaloriesTargVal, new GBC(0, 4).inset(0,0,10).anchor(GBC.NORTH));
-		/*
-		calPanel.setBorder(BorderFactory.createMatteBorder(0,0,0,1,Color.BLACK));
-		*/
 		panelOutputs.add(calPanel);
-
-		/* Radio Controls */
-		/*
-		radioOn = new JButton("On");
-		radioOff = new JButton("Off");
-		JPanel radioPanel = new JPanel(new GridBagLayout());
-		radioPanel.add(new JLabel("RADIO"), new GBC(0, 0).inset(6,0,15).weight(1, 0).anchor(GBC.SOUTH));
-		radioPanel.add(radioOn, new GBC(0, 1).height(2).anchor(GBC.SOUTH).fill(GBC.HORIZONTAL));
-		radioPanel.add(radioOff, new GBC(0, 3).height(2).anchor(GBC.NORTH).fill(GBC.HORIZONTAL));
-		panelOutputs.add(radioPanel);
-		*/
 
 
 
@@ -226,8 +209,6 @@ public class ControlTab extends JPanel {
 		 *
 		 * 		http://www.codeguru.com/forum/showthread.php?t=221440
 		 */
-		/* XXX: what about decimals? or hh:mm:ss? this is harder than it
-		 * seems. */
 		goalTextField.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 			  char c = e.getKeyChar();
@@ -279,7 +260,6 @@ public class ControlTab extends JPanel {
 		add(panelMessage, new GBC(0, 0).fill(GBC.HORIZONTAL));
 		add(panelOutputs, new GBC(0, 10).weight(1, 1).fill(GBC.BOTH));
 		add(panelInputs, new GBC(0, 20).weight(1, 1).fill(GBC.BOTH));
-		/* }}} */
 		
 
 		/* Set up the instance variables. */
@@ -303,7 +283,6 @@ public class ControlTab extends JPanel {
 	private void updateLabels() {
 		labelTimeElapsedVal.setText(String.format("%02d:%02d:%02d", (int)(runner.getTimeElapsed() / 3600),
 				(int)(runner.getTimeElapsed() / 60) % 60, (int)(runner.getTimeElapsed()) % 60));
-		// DIRTY HACK: If the treadmill is paused, the runner is too.
 		if (myTreadmill.getState() == Session.State.RUNNING) {
 			labelSpeedCurVal.setText(String.format("%5.3f mph", runner.getSpeed()));
 		} else {
@@ -566,7 +545,7 @@ public class ControlTab extends JPanel {
 			sSpeed.setValue(new Double(0.0));
 			sIncline.setValue(new Integer(0));
 			sUserSpeed.setValue(new Double(0.0));
-			// Reset goals 'n programs
+			// Reset goals & programs
 			goalDist = null;
 			goalDur = null;
 			goalCal = null;
