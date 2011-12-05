@@ -19,8 +19,19 @@ time.
 Installation
 ------------
 
-If you use the [Eclipse][1] IDE, there is provided a `.project` file which you
-can add, and then simply click the Run button.
+If you use the [Eclipse][1] IDE, then to import and run the project with our zip
+file, you need to:
+
+1. Select File > Import
+2. Expand "General", then select "Existing Projects into Workspace" and click
+   Next.
+3. Choose "Select archive file" and navigate to the zip file. Alternatively, you
+   can choose "Select root directory" and navigate to the directory that you
+   extracted from the zip file.
+4. A project called PiTech will appear. Make sure it is checked, and then click
+   "Finish".
+5. The PiTech project will appear in your Project Explorer, which can then be
+   run in the usual manner.
 
 Compiling the program into a jar-file on the command line is easy:
 
